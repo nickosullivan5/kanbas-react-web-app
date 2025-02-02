@@ -12,7 +12,7 @@ export default function CourseNavigation() {
       <Link to="/Kambaz/Courses/1234/Quizzes" id="wd-course-assignments-link">Quizzes
         </Link><br/>
       <Link to="/Kambaz/Courses/1234/Grades" id="wd-course-grades-link">Grades</Link><br/>
-      <Link to="/Kambaz/People" id="wd-course-people-link">People</Link><br/>
+      <Link to="/Kambaz/Courses/1234/People" id="wd-course-people-link">People</Link><br/>
     </div>
   );
 }
