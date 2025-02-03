@@ -1,6 +1,12 @@
 import "./index.css";
 import Borders from "./borders.tsx";
 import Margins from "./margins.tsx";
+import Corners from "./corners.tsx";
+import Dimensions from "./dimensions.tsx";
+import Positions from "./positions.tsx";
+import Zindex from "./zindex.tsx";
+import Float from "./float.tsx";
+import Gridlayout from "./gridlayout.tsx";
 export default function Lab2() {
     return (
 
@@ -59,6 +65,12 @@ export default function Lab2() {
 
             <Borders/>
             <Margins/>
+            <Corners/>
+            <Dimensions/>
+            <Positions/>
+            <Zindex/>
+            <Float/>
+            <Gridlayout/>
 
 
 
