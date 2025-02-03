@@ -12,6 +12,8 @@ import Flex from "./flex.tsx";
 import ReactIconsSampler from "./ReactIcons.tsx";
 import {Container} from "react-bootstrap";
 import BootstrapGrids from "./BootstrapGrids.tsx";
+import BootstrapTables from "./BootstrapTables.tsx";
+import BootstrapLists from "./BootstrapLists.tsx";
 export default function Lab2() {
     return (
         <Container>
@@ -22,6 +24,8 @@ export default function Lab2() {
             {/*<div id="wd-lab2">*/}
 
             <BootstrapGrids/>
+            <BootstrapTables/>
+            <BootstrapLists/>
 
             <div id="wd-css-class-selectors">
                 <h3>Class selectors</h3>
