@@ -1,4 +1,5 @@
 import "./index.css";
+
 import Borders from "./borders.tsx";
 import Margins from "./margins.tsx";
 import Corners from "./corners.tsx";
@@ -7,12 +8,20 @@ import Positions from "./positions.tsx";
 import Zindex from "./zindex.tsx";
 import Float from "./float.tsx";
 import Gridlayout from "./gridlayout.tsx";
+import Flex from "./flex.tsx";
+import ReactIconsSampler from "./ReactIcons.tsx";
+import {Container} from "react-bootstrap";
+import BootstrapGrids from "./BootstrapGrids.tsx";
 export default function Lab2() {
     return (
+        <Container>
 
-        <div id="wd-lab2">
             <h2>Lab 2 - Cascading Style Sheets</h2>
             <h3>Styling with the STYLE attribute</h3>
+
+            {/*<div id="wd-lab2">*/}
+
+            <BootstrapGrids/>
 
             <div id="wd-css-class-selectors">
                 <h3>Class selectors</h3>
@@ -71,10 +80,12 @@ export default function Lab2() {
             <Zindex/>
             <Float/>
             <Gridlayout/>
+            <Flex/>
+            <ReactIconsSampler/>
 
 
-
-        </div>
+            {/*</div>*/}
+        </Container>
 
     );
 }
