@@ -14,10 +14,12 @@ import {Container} from "react-bootstrap";
 import BootstrapGrids from "./BootstrapGrids.tsx";
 import BootstrapTables from "./BootstrapTables.tsx";
 import BootstrapLists from "./BootstrapLists.tsx";
+import BootstrapForms from "./BootstrapForms.tsx";
+import BootstrapNavigation from "./BootstrapNavigation.tsx";
 export default function Lab2() {
     return (
         <Container>
-
+            <BootstrapNavigation/>
             <h2>Lab 2 - Cascading Style Sheets</h2>
             <h3>Styling with the STYLE attribute</h3>
 
@@ -26,7 +28,7 @@ export default function Lab2() {
             <BootstrapGrids/>
             <BootstrapTables/>
             <BootstrapLists/>
-
+            <BootstrapForms/>
             <div id="wd-css-class-selectors">
                 <h3>Class selectors</h3>
 
