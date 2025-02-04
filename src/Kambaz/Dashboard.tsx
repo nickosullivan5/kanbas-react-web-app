@@ -4,7 +4,7 @@ import {MdEditNote} from "react-icons/md";
 
 export default function Dashboard() {
     return (
-        <div id="wd-dashboard" className="pt-2 ps-5">
+        <div id="wd-dashboard" className="pt-2 ps-5 fs-6">
             <h1 id="wd-dashboard-title"><b>Dashboard</b></h1>
             <hr/>
             <h4 id="wd-dashboard-published">Published Courses (12)</h4>

@@ -3,14 +3,14 @@ import GreenCheckmark from "./GreenCheckmark.tsx";
 import { Button, Dropdown } from "react-bootstrap";
 export default function ModulesControls() {
  return (
-   <div id="wd-modules-controls" className="text-nowrap">
+   <div id="wd-modules-controls" className="text-nowrap fs-6">
 
-     <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-module-btn">
+     <Button variant="danger" size="lg" className="me-1 float-end fs-6" id="wd-add-module-btn">
        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
        Module
      </Button>
-     <Dropdown className="float-end me-2">
-       <Dropdown.Toggle variant="secondary" size="lg" id="wd-publish-all-btn">
+     <Dropdown className="float-end me-2 fs-6">
+       <Dropdown.Toggle variant="secondary" size="lg" className="fs-6" id="wd-publish-all-btn">
          <GreenCheckmark /> Publish All
        </Dropdown.Toggle>
        <Dropdown.Menu>
@@ -31,11 +31,11 @@ export default function ModulesControls() {
          </Dropdown.Item>
        </Dropdown.Menu>
      </Dropdown>
-        <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-collapse-all">
+        <Button variant="secondary" size="lg" className="me-1 float-end fs-6" id="wd-collapse-all">
        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
        Collapse All
      </Button>
-       <Button variant = "secondary" size="lg" className="me-2 float-end" id="wd-view-progress">
+       <Button variant = "secondary" size="lg" className="me-2 float-end fs-6" id="wd-view-progress">
        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
        View Progress
      </Button>

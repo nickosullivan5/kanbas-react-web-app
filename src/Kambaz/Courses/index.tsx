@@ -7,10 +7,10 @@ import AssignmentEditor from "./Assignments/Editor.tsx";
 import {FaAlignJustify} from "react-icons/fa";
 export default function Courses() {
   return (
-      <div id="wd-courses" className="ps-4">
-          <h2 className="text-danger">
+      <div id="wd-courses" className="ps-4e">
+          <h5 className="text-danger ps-3">
               <FaAlignJustify className="me-4 fs-4 mb-1"/>
-              Course 1234 </h2>
+              Course 1234 </h5>
           <hr/>
           <div className="d-flex">
               <div className="d-none d-md-block">

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 export default function CourseNavigation() {
   return (
-      <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0" >
+      <div id="wd-courses-navigation" className="wd list-group fs-6 rounded-0" >
           <Link to="/Kambaz/Courses/1234/Home" id="wd-course-home-link"
                 className="list-group-item active border border-0"> Home </Link><br/>
           <Link to="/Kambaz/Courses/1234/Modules" id="wd-course-modules-link"
