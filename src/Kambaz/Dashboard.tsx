@@ -1,90 +1,178 @@
+import {Card, Col, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import {MdEditNote} from "react-icons/md";
 
 export default function Dashboard() {
     return (
-        <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1>
+        <div id="wd-dashboard" className="pt-2 ps-5">
+            <h1 id="wd-dashboard-title"><b>Dashboard</b></h1>
             <hr/>
-            <h2 id="wd-dashboard-published">Published Courses (12)</h2>
+            <h4 id="wd-dashboard-published">Published Courses (12)</h4>
             <hr/>
             <div id="wd-dashboard-courses">
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/1234/Home"
-                          className="wd-dashboard-course-link">
-                        <img src="/images/reactjs.jpg" width={200}/>
-                        <div>
-                            <h5> CS1234 React JS </h5>
-                            <p className="wd-dashboard-course-title">
-                                Full Stack software developer </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/5678/Home" className="wd-dashboard-course-link">
-                        <img src="/images/javascript.jpg" width={200}/>
-                        <div>
-                            <h5> CS5678 JavaScript </h5>
-                            <p className="wd-dashboard-course-title"> Frontend Web Development </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                <Row xs={1} md={5} className="g-4">
 
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/9101/Home" className="wd-dashboard-course-link">
-                        <img src="/images/python.jpg" width={200}/>
-                        <div>
-                            <h5> CS9101 Python Programming </h5>
-                            <p className="wd-dashboard-course-title"> Data Science & AI </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                    <Col className="wd-dashboard-course pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/1234/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
 
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/1122/Home" className="wd-dashboard-course-link">
-                        <img src="/images/java.jpg" width={200}/>
-                        <div>
-                            <h5> CS1122 Java Fundamentals </h5>
-                            <p className="wd-dashboard-course-title"> Object-Oriented Programming </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                                <Card.Img variant="top" src="/images/react.png" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title">CS1234 React JS</Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description">Full Stack software
+                                        developer</Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/3344/Home" className="wd-dashboard-course-link">
-                        <img src="/images/sql.jpg" width={200}/>
-                        <div>
-                            <h5> CS3344 SQL & Databases </h5>
-                            <p className="wd-dashboard-course-title"> Database Management Systems </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                    <Col className="wd-dashboard-course pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/5678/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
 
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/5566/Home" className="wd-dashboard-course-link">
-                        <img src="/images/cplusplus.jpg" width={200}/>
-                        <div>
-                            <h5> CS5566 C++ Programming </h5>
-                            <p className="wd-dashboard-course-title"> System Programming & Algorithms </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                                <Card.Img variant="top" src="/images/javascript.png" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title">CS5678 Javascript</Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description">Frontend Web Development
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
 
-                <div className="wd-dashboard-course">
-                    <Link to="/Kambaz/Courses/7788/Home" className="wd-dashboard-course-link">
-                        <img src="/images/cybersecurity.jpg" width={200}/>
-                        <div>
-                            <h5> CS7788 Cybersecurity </h5>
-                            <p className="wd-dashboard-course-title"> Ethical Hacking & Network Security </p>
-                            <button> Go</button>
-                        </div>
-                    </Link>
-                </div>
+                    <Col className="wd-dashboard-course pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/9101/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
+
+                                <Card.Img variant="top" src="/images/python.png" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title">CS9101 Python </Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description">Data Science
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
+
+                    <Col className="wd-dashboard-course  pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/1122/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
+
+                                <Card.Img variant="top" src="/images/java.jpg" width={200}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title"> CS1122 Java
+                                        Fundamentals </Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description"> Object-Oriented Programming
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
+                    <Col className="wd-dashboard-course  pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/3344/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
+
+                                <Card.Img variant="top" src="/images/sql.png" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title"> CS3344 SQL &
+                                        Databases </Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description"> Database Management
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
+
+                    <Col className="wd-dashboard-course  pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/5566/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
+
+                                <Card.Img variant="top" src="/images/cplusplus.png" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title"> CS5566 C++
+                                        Programming </Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description"> System Programming in C++
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
+
+                    <Col className="wd-dashboard-course pt-2" style={{width: "300px"}}>
+                        <Card>
+                            <Link to="/Kambaz/Courses/2000/Home"
+                                  className="wd-dashboard-course-link text-decoration-none text-dark">
+
+                                <Card.Img variant="top" src="/images/cybersecurity.jpg" style={{
+                                    width: "275px",
+                                    height: "200px",
+                                    objectFit: "cover",
+                                }}/>
+                                <Card.Body>
+                                    <Card.Title className="wd-dashboard-course-title"> CY2000
+                                        Cybersecurity </Card.Title>
+                                    <Card.Text className="wd-dashboard-course-description"> Network Security
+                                    </Card.Text>
+                                    <MdEditNote color="gray" size={25} style={{
+                                        border: "2px solid gray",
+                                        borderRadius: "4px",
+                                    }}>Go</MdEditNote>
+                                </Card.Body>
+                            </Link>
+                        </Card>
+                    </Col>
+
+                </Row>
 
             </div>
         </div>
