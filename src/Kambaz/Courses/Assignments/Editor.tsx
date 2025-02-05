@@ -3,13 +3,11 @@ import { Container, Form, Row, Col, Button } from "react-bootstrap";
 export default function AssignmentEditor() {
     return (
         <Container id="wd-assignments-editor" className="ps-5 pe-5">
-            {/* Assignment Name */}
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="wd-name">Assignment Name</Form.Label>
                 <Form.Control id="wd-name" type="text" defaultValue="A1 " />
             </Form.Group>
 
-            {/* Description */}
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="wd-description">Description</Form.Label>
                 <Form.Control as="textarea" id="wd-description" style={{ height: "250px" }} defaultValue="The assignment is available online. Submit a link to the landing page of Netlify" />
@@ -24,7 +22,6 @@ export default function AssignmentEditor() {
                 </Col>
             </Row>
 
-            {/* Assignment Group */}
             <Row className="mb-3">
                 <Col md={3}>
                     <Form.Label htmlFor="wd-group">Assignment Group</Form.Label>
@@ -38,7 +35,6 @@ export default function AssignmentEditor() {
                 </Col>
             </Row>
 
-            {/* Display Grade As */}
             <Row className="mb-3">
                 <Col md={3}>
                     <Form.Label htmlFor="wd-display-grade-as">Display Grade as</Form.Label>
@@ -52,7 +48,6 @@ export default function AssignmentEditor() {
                 </Col>
             </Row>
 
-            {/* Submission Type */}
             <Row className="mb-3">
                 <Col md={3}>
                     <Form.Label htmlFor="wd-submission-type">Submission Type</Form.Label>
@@ -108,7 +103,6 @@ export default function AssignmentEditor() {
                 </Col>
             </Row>
 
-            {/* Buttons */}
             <div className="d-flex justify-content-end mt-3">
                 <Button variant="light" className="me-2 border">Cancel</Button>
                 <Button variant="danger">Save</Button>
