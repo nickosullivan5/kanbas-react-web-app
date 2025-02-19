@@ -31,6 +31,8 @@ import Square from "./Square.tsx";
 import Highlight from "./Highlight.tsx"
 import PathParameters from "./PathParameters.tsx";
 export default function Lab3() {
+  console.log('Hello World!');
+
   return(
       <div id="wd-lab3">
         <h3>Lab 3</h3>
