@@ -11,7 +11,7 @@ export default function Modules() {
     const modules = db.modules;
 
     return (
-        <>
+
             <Container className="position-relative"> {/* Position context for absolute elements */}
                 {/* Make the module controls stack over the list */}
                 <div className="pt-3 position-sticky top-0 bg-white z-3">
@@ -42,7 +42,6 @@ export default function Modules() {
                     </ListGroup>
                 </div>
             </Container>
-            <br /><br /><br />
-        </>
+
     );
 }

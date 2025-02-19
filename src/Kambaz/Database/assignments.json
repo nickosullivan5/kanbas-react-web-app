@@ -1,0 +1,11 @@
+[
+  { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "release_date": "2024-10-20", "due_date": "2024-10-22", "due_time": "23:59", "total_points": 100, "num_modules": 3 },
+  { "_id": "A102", "title": "Combustion Analysis", "course": "RS101", "release_date": "2024-10-21", "due_date": "2024-10-23", "due_time": "23:59", "total_points": 100, "num_modules": 5 },
+  { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101", "release_date": "2024-10-22", "due_date": "2024-10-24", "due_time": "23:59", "total_points": 100, "num_modules": 2 },
+  { "_id": "A201", "title": "Aerodynamics Quiz", "course": "RS102", "release_date": "2024-10-23", "due_date": "2024-10-25", "due_time": "23:59", "total_points": 100, "num_modules": 4 },
+  { "_id": "A202", "title": "Flow Analysis", "course": "RS102", "release_date": "2024-10-24", "due_date": "2024-10-26", "due_time": "23:59", "total_points": 100, "num_modules": 1 },
+  { "_id": "A203", "title": "Heating Analysis", "course": "RS102", "release_date": "2024-10-25", "due_date": "2024-10-27", "due_time": "23:59", "total_points": 100, "num_modules": 3 },
+  { "_id": "A301", "title": "Structural Design Task", "course": "RS103", "release_date": "2024-10-26", "due_date": "2024-10-28", "due_time": "23:59", "total_points": 100, "num_modules": 5 },
+  { "_id": "A302", "title": "Orbital Calculations", "course": "RS103", "release_date": "2024-10-27", "due_date": "2024-10-29", "due_time": "23:59", "total_points": 100, "num_modules": 2 },
+  { "_id": "A303", "title": "Systems Engineering Exam", "course": "RS103", "release_date": "2024-10-28", "due_date": "2024-10-30", "due_time": "23:59", "total_points": 100, "num_modules": 4 }
+]
