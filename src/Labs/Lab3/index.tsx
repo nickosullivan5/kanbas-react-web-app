@@ -25,11 +25,16 @@ import Spreading from "./Spreading.tsx";
 import Destructing from "./Destructing.tsx";
 import FunctionDestructing from "./FunctionDestructing.tsx";
 import DestructingImports from "./DestructingImports.tsx";
+import Classes from "./Classes.tsx";
+import Add from "./Add.tsx";
+import Square from "./Square.tsx";
+import Highlight from "./Highlight.tsx"
+import PathParameters from "./PathParameters.tsx";
 export default function Lab3() {
   return(
-    <div id="wd-lab3">
-      <h3>Lab 3</h3>
-      <VariablesAndConstants/>
+      <div id="wd-lab3">
+        <h3>Lab 3</h3>
+        <VariablesAndConstants/>
         <VariableTypes/>
         <BooleanVariables/>
         <IfElse/>
@@ -40,22 +45,35 @@ export default function Lab3() {
         <ArrowFunctions/>
         <ImpliedReturn/>
         <TemplateLiterals/>
-      <SimpleArrays/>
-      <ArrayIndexAndLength/>
-      <AddingAndRemovingToFromArrays/>
-      <ForLoops/>
-      <MapFunction/>
-      <FindFunction/>
-      <FindIndex/>
-      <FilterFunction/>
-      <JsonStringify/>
-      <House/>
-      <TodoItem/>
-      <TodoList/>
-      <Spreading/>
-      <Destructing/>
-      <FunctionDestructing/>
-      <DestructingImports/>
-    </div>
+        <SimpleArrays/>
+        <ArrayIndexAndLength/>
+        <AddingAndRemovingToFromArrays/>
+        <ForLoops/>
+        <MapFunction/>
+        <FindFunction/>
+        <FindIndex/>
+        <FilterFunction/>
+        <JsonStringify/>
+        <House/>
+        <TodoItem/>
+        <TodoList/>
+        <Spreading/>
+        <Destructing/>
+        <FunctionDestructing/>
+        <DestructingImports/>
+        <Classes/>
+        <Add a={3} b={4}/>
+        <h4>Square of 4</h4>
+        <Square>4</Square>
+        <hr/>
+        <Highlight>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
+        vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
+     </Highlight>
+        <PathParameters/>
+
+
+
+      </div>
   );
 }
