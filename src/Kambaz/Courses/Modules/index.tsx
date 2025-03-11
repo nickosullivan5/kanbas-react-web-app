@@ -8,6 +8,7 @@ import {useState} from "react";
 import {addModule, editModule, updateModule, deleteModule}
     from "./reducer";
 import {useSelector, useDispatch} from "react-redux";
+import FacultyOnlyRoute from "../../Account/FacultyOnlyRoute.tsx";
 
 export default function Modules() {
     const {cid} = useParams();
@@ -20,13 +21,17 @@ export default function Modules() {
 
         <Container className="position-relative"> {/* Position context for absolute elements */}
             {/* Make the module controls stack over the list */}
-            <div className="pt-3 position-sticky top-0 bg-white z-3">
-                <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
-                    dispatch(addModule({name: moduleName, course: cid}));
-                    setModuleName("");
-                }}/>
+            <FacultyOnlyRoute>
 
-            </div>
+                <div className="pt-3 position-sticky top-0 bg-white z-3">
+                    <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
+                        dispatch(addModule({name: moduleName, course: cid}));
+                        setModuleName("");
+                    }}/>
+
+                </div>
+            </FacultyOnlyRoute>
+
 
             <div className="z-2 mt-5"> {/* Added margin-top to separate the list from the controls */}
                 <ListGroup id="wd-modules" className="rounded-0">
@@ -50,6 +55,7 @@ export default function Modules() {
                                                      }}
                                                      defaultValue={module.name}/>
                                     )}
+                                              <FacultyOnlyRoute>
 
                                     <ModuleControlButtons
                                         moduleId={module._id}
@@ -57,6 +63,8 @@ export default function Modules() {
                                             dispatch(deleteModule(moduleId));
                                         }}
                                         editModule={(moduleId) => dispatch(editModule(moduleId))}/>
+                                                            </FacultyOnlyRoute>
+
 
 
                                 </div>
