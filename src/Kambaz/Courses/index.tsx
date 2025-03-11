@@ -6,13 +6,12 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor.tsx";
 import {FaAlignJustify} from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
-import { courses } from "../Database";
 
-export default function Courses() {
-    const { pathname } = useLocation();
+export default function Courses({ courses }: { courses: any[]; }) {
+  const { pathname } = useLocation();
 
-    const { cid } = useParams();
-    const course = courses.find((course) => course._id === cid);
+  const { cid } = useParams();
+  const course = courses.find((course) => course._id === cid);
     return (
       <div id="wd-courses" className="ps-4e">
           <h5 className="text-danger ps-3">
