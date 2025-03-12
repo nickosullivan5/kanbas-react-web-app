@@ -95,13 +95,13 @@ export default function Dashboard() {
             <hr/>
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
-                    {courses.filter((course) =>
+                    {courses.filter((course: any) =>
                          showAllClasses || enrollments.some(
-      (enrollment) =>
+      (enrollment: any) =>
         enrollment.user === currentUser._id &&
         enrollment.course === course._id
     ))
-                        .map((course) => (
+                        .map((course: any) => (
                             <Col key={course._id} className="wd-dashboard-course" style={{width: "300px"}}>
                                 <Card>
                                     <Link
@@ -152,7 +152,7 @@ export default function Dashboard() {
                                             <StudentOnlyRoute>
                                                 {(() => {
                                                     const enrollment = enrollments.find(
-                                                        (enrollment) =>
+                                                        (enrollment: any) =>
                                                             enrollment.user === currentUser._id &&
                                                             enrollment.course === course._id
                                                     );

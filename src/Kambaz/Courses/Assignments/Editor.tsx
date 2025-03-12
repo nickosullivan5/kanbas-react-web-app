@@ -7,7 +7,7 @@ import {addAssignment, updateAssignment} from "./reducer";
 export default function AssignmentEditor() {
     const {cid, aid} = useParams();
     const {assignments} = useSelector((state: any) => state.assignmentsReducer);
-    const assignmentExists = assignments.find(a => a._id === aid);
+    const assignmentExists = assignments.find((a: { _id: string | undefined; }) => a._id === aid);
     console.log("CID:", cid);
 
     const [courseID] = useState(cid);
@@ -76,7 +76,7 @@ export default function AssignmentEditor() {
                                 if (e.target.checked) {
                                     setOnlineEntryOption([...onlineEntryOption, option]);
                                 } else {
-                                    setOnlineEntryOption(onlineEntryOption.filter(item => item !== option));
+                                    setOnlineEntryOption(onlineEntryOption.filter((item: string) => item !== option));
                                 }
                             }}
                         />

@@ -13,7 +13,7 @@ export default function Courses() {
   const {courses} = useSelector((state: any) => state.coursesReducer);
 
   const { cid } = useParams();
-  const course = courses.find((course) => course._id === cid);
+  const course = courses.find((course: { _id: string | undefined; }) => course._id === cid);
     return (
       <div id="wd-courses" className="ps-4e">
           <h5 className="text-danger ps-3">
