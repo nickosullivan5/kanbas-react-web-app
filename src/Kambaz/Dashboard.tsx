@@ -1,27 +1,22 @@
 import {Card, Col, FormControl, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {MdEditNote} from "react-icons/md";
-import {useSelector} from "react-redux";
 import * as db from "./Database";
 import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
+import {useState} from "react";
+import {addCourse, deleteCourse, updateCourse} from "./Courses/reducer.ts";
+import {useDispatch, useSelector} from "react-redux";
 
-export default function Dashboard({
-                                      courses,
-                                      course,
-                                      setCourse,
-                                      addNewCourse,
-                                      deleteCourse,
-                                      updateCourse,
-                                  }: {
-    courses: any[];
-    course: any;
-    setCourse: (course: any) => void;
-    addNewCourse: () => void;
-    deleteCourse: (courseId: string) => void;
-    updateCourse: () => void;
-}) {
+export default function Dashboard() {
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const {enrollments} = db;
+    const {courses} = useSelector((state: any) => state.coursesReducer);
+    console.log("courses from Redux:", courses);
+    const [course, setCourse] = useState<any>({
+        _id: "1234", name: "New Course", number: "New Number",
+        startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
+    });
+    const dispatch = useDispatch();
 
     return (
         <div id="wd-dashboard" className="pt-2 ps-5 fs-6">
@@ -29,34 +24,36 @@ export default function Dashboard({
                 <b>Dashboard</b>
             </h1>
             <FacultyOnlyRoute>
-            <h5>
-                New Course
-                <button
-                    className="btn btn-warning float-end me-2"
-                    onClick={updateCourse}
-                    id="wd-update-course-click"
-                >
-                    Update
-                </button>
+                <h5>
+                    New Course
+                    <button
+                        className="btn btn-warning float-end me-2"
+                        onClick={() => dispatch(updateCourse(course))}
 
-                <button
-                    className="btn btn-light btn-outline-dark float-end"
-                    id="wd-add-new-course-click"
-                    onClick={addNewCourse}
-                >
-                    Add
-                </button>
-            </h5>
-            <br/>
-            <FormControl
-                value={course.name}
-                className="mb-2"
-                onChange={(e) => setCourse({...course, name: e.target.value})}
-            />
-            <FormControl
-                value={course.description}
-                onChange={(e) => setCourse({...course, description: e.target.value})}
-            />
+                        id="wd-update-course-click"
+                    >
+                        Update
+                    </button>
+
+                    <button
+                        className="btn btn-light btn-outline-dark float-end"
+                        id="wd-add-new-course-click"
+                        onClick={() => dispatch(addCourse(course))}
+
+                    >
+                        Add
+                    </button>
+                </h5>
+                <br/>
+                <FormControl
+                    value={course.name}
+                    className="mb-2"
+                    onChange={(e) => setCourse({...course, name: e.target.value})}
+                />
+                <FormControl
+                    value={course.description}
+                    onChange={(e) => setCourse({...course, description: e.target.value})}
+                />
             </FacultyOnlyRoute>
 
             <hr/>
@@ -95,29 +92,29 @@ export default function Dashboard({
                                                 style={{border: "2px solid gray", borderRadius: "4px"}}
                                             />
                                             <FacultyOnlyRoute>
-                                            <button
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    deleteCourse(course._id);
-                                                }}
-                                                className="btn btn-danger fs-6 float-end"
-                                                id="wd-delete-course-click"
-                                            >
-                                                Delete
-                                            </button>
+                                                <button
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        dispatch(deleteCourse(course._id));
+                                                    }}
+                                                    className="btn btn-danger fs-6 float-end"
+                                                    id="wd-delete-course-click"
+                                                >
+                                                    Delete
+                                                </button>
                                             </FacultyOnlyRoute>
                                             <FacultyOnlyRoute>
-                                            <button
-                                                id="wd-edit-course-click"
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    setCourse(course);
-                                                }}
-                                                className="btn btn-warning me-2 float-end"
-                                            >
-                                                Edit
-                                            </button>
-                                                </FacultyOnlyRoute>
+                                                <button
+                                                    id="wd-edit-course-click"
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
+                                                        setCourse(course);
+                                                    }}
+                                                    className="btn btn-warning me-2 float-end"
+                                                >
+                                                    Edit
+                                                </button>
+                                            </FacultyOnlyRoute>
                                         </Card.Body>
                                     </Link>
                                 </Card>
