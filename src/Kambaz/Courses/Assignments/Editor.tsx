@@ -10,7 +10,7 @@ export default function AssignmentEditor() {
     const assignmentExists = assignments.find(a => a._id === aid);
     console.log("CID:", cid);
 
-    const [courseID, setCourseID] = useState(cid);
+    const [courseID] = useState(cid);
     const [title, setTitle] = useState(assignmentExists?.title || "A1");
     const [description, setDescription] = useState(assignmentExists?.description || "The assignment is available online. Submit a link to the landing page of Netlify");
     const [totalPoints, setTotalPoints] = useState(assignmentExists?.total_points || "100");
@@ -18,8 +18,8 @@ export default function AssignmentEditor() {
     const [submissionType, setSubmissionType] = useState(assignmentExists?.submission_type || "Online");
     const [assignTo, setAssignTo] = useState(assignmentExists?.assign_to || "Everyone");
     const [dueDate, setDueDate] = useState(assignmentExists?.due_date || "2000-00-00");
-    const [dueTime, setDueTime] = useState(assignmentExists?.due_time || "00:00");
-    const [numModules, setNumModules] = useState(assignmentExists?.num_modules || "1");
+    const [dueTime] = useState(assignmentExists?.due_time || "00:00");
+    const [numModules] = useState(assignmentExists?.num_modules || "1");
     const [onlineEntryOption, setOnlineEntryOption] = useState(assignmentExists?.online_entry_option || ["Text Entry"]);
     const [releaseDate, setReleaseDate] = useState(assignmentExists?.release_date || "2000-00-00");
     const dispatch = useDispatch();
