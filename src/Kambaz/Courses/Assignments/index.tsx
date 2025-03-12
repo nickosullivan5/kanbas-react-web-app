@@ -7,11 +7,24 @@ import { CiSearch } from "react-icons/ci";
 import { GoPlus } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import * as db from "../../Database";
+import {useDispatch, useSelector} from "react-redux";
+import FacultyOnlyRoute from "../../Account/FacultyOnlyRoute"
+import { v4 as uuidv4 } from "uuid";
+import { FaRegTrashAlt } from "react-icons/fa";
+import {deleteAssignment} from "./reducer.ts";
+import {useState} from "react";
+import AssignmentDeletion from "./AssignmentDeletion.tsx";
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments = db.assignments;
+
+        const {assignments} = useSelector((state: any) => state.assignmentsReducer);
+        console.log("Assignments from Redux:", assignments);
+          const dispatch = useDispatch();
+
+      const [show, setShow] = useState(false);
+     const handleClose = () => setShow(false);
+     const handleShow = () => setShow(true);
 
     return (
         <div id="wd-assignments" className="container">
@@ -25,16 +38,19 @@ export default function Assignments() {
                         style={{ outline: 'none' }}
                     />
                 </div>
-
+                <FacultyOnlyRoute>
                 {/* Buttons for Adding Group and Assignment */}
                 <div className="d-flex">
                     <button className="rounded-0 me-2" style={{ border: '1px solid #d3d3d3' }}>
                         <GoPlus/> Group
                     </button>
+                     <Link to={`/Kambaz/Courses/${cid}/Assignments/${uuidv4()}`}>
                     <button className="rounded-0 border-0 bg-danger text-white">
                         <GoPlus/> Assignment
                     </button>
+                     </Link>
                 </div>
+                </FacultyOnlyRoute>
             </div>
 
             {/* Assignment List */}
@@ -59,9 +75,11 @@ export default function Assignments() {
                     .map((assignment: any) => (
                         <ListGroup.Item key={assignment._id} className="wd-assignment-list-item p-3 ps-2 fs-6 d-flex align-items-center border-start border-gray gap-2">
                             <BsGripVertical className="fs-5"/>
+                            <FacultyOnlyRoute>
                             <Link to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}>
                                 <FaRegEdit className="text-success fs-5"/>
                             </Link>
+                            </FacultyOnlyRoute>
                             <div className="flex-grow-1">
                                 <div><b>{assignment.title}</b></div>
                                 <small className="text-muted">
@@ -94,6 +112,13 @@ export default function Assignments() {
                             </div>
                             <GreenCheckmark/>
                             <IoEllipsisVertical className="fs-4 ms-2"/>
+                              <FaRegTrashAlt onClick={handleShow} style={{ cursor: 'pointer' }} />
+
+                              <AssignmentDeletion show={show} handleClose={handleClose} dialogTitle="Confirm Deletion"
+                            deleteAssignment={() => {
+                        dispatch(deleteAssignment(assignment._id))} } />
+
+
                         </ListGroup.Item>
                     ))
                 }
