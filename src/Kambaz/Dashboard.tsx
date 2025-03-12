@@ -1,15 +1,17 @@
 import {Card, Col, FormControl, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {MdEditNote} from "react-icons/md";
-import * as db from "./Database";
 import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
+import StudentOnlyRoute from "./Account/StudentOnlyRoute";
 import {useState} from "react";
 import {addCourse, deleteCourse, updateCourse} from "./Courses/reducer.ts";
 import {useDispatch, useSelector} from "react-redux";
+import {addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer.ts";
+import {v4 as uuidv4} from "uuid";
 
 export default function Dashboard() {
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const {enrollments} = db;
+    const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
     const {courses} = useSelector((state: any) => state.coursesReducer);
     console.log("courses from Redux:", courses);
     const [course, setCourse] = useState<any>({
@@ -17,12 +19,31 @@ export default function Dashboard() {
         startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
     });
     const dispatch = useDispatch();
+    const [showAllClasses, setShowAllClasses] = useState(false);
+    //if the user.role === "STUDENT"
+    //add Enrollments button: clicking it flips the current state of showAllClasses <studentonlyroute>
+
+    //add unenroll button for each class the student is enrolled in.
+    //add enroll button for each class the student isnt enrolled in.
 
     return (
         <div id="wd-dashboard" className="pt-2 ps-5 fs-6">
             <h1 id="wd-dashboard-title">
                 <b>Dashboard</b>
             </h1>
+            <StudentOnlyRoute>
+                    <h5>
+
+                <button
+                    className="btn btn-primary float-end me-2"
+                    onClick={() => setShowAllClasses(!showAllClasses)}
+                    id="wd-enrollments-click"
+                >
+                    Enrollments
+                </button>
+                </h5>
+            </StudentOnlyRoute>
+
             <FacultyOnlyRoute>
                 <h5>
                     New Course
@@ -38,7 +59,18 @@ export default function Dashboard() {
                     <button
                         className="btn btn-light btn-outline-dark float-end"
                         id="wd-add-new-course-click"
-                        onClick={() => dispatch(addCourse(course))}
+                        onClick={() => {
+                            setCourse({...course, _id: uuidv4()})
+                            dispatch(addCourse(course));
+                            dispatch(
+                                addEnrollment({
+                                    id: uuidv4(),
+                                    user: currentUser._id,
+                                    course: course._id
+                                })
+                            );
+                        }}
+
 
                     >
                         Add
@@ -64,11 +96,11 @@ export default function Dashboard() {
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
                     {courses.filter((course) =>
-                        enrollments.some(
-                            (enrollment) =>
-                                enrollment.user === currentUser._id &&
-                                enrollment.course === course._id
-                        ))
+                         showAllClasses || enrollments.some(
+      (enrollment) =>
+        enrollment.user === currentUser._id &&
+        enrollment.course === course._id
+    ))
                         .map((course) => (
                             <Col key={course._id} className="wd-dashboard-course" style={{width: "300px"}}>
                                 <Card>
@@ -77,6 +109,8 @@ export default function Dashboard() {
                                         className="wd-dashboard-course-link text-decoration-none text-dark"
                                     >
                                         <Card.Img src="/images/NEU.png" variant="top" width="100%" height={160}/>
+                                    </Link>
+
                                         <Card.Body className="card-body">
                                             <Card.Title
                                                 className="wd-dashboard-course-title text-nowrap overflow-hidden">
@@ -115,8 +149,35 @@ export default function Dashboard() {
                                                     Edit
                                                 </button>
                                             </FacultyOnlyRoute>
+                                            <StudentOnlyRoute>
+                                                {(() => {
+                                                    const enrollment = enrollments.find(
+                                                        (enrollment) =>
+                                                            enrollment.user === currentUser._id &&
+                                                            enrollment.course === course._id
+                                                    );
+                                                    return (
+                                                        <button
+                                                            id={enrollment ? "wd-unenroll-course-click" : "wd-enroll-course-click"}
+                                                            onClick={() => {
+                                                                if (enrollment) {
+                                                                    dispatch(deleteEnrollment(enrollment._id));
+                                                                } else {
+                                                                    dispatch(addEnrollment({
+                                                                        id: uuidv4(),
+                                                                        user: currentUser._id,
+                                                                        course: course._id
+                                                                    }));
+                                                                }
+                                                            }}
+                                                            className={`btn ${enrollment ? "btn-danger" : "btn-success"} me-2 float-end`}
+                                                        >
+                                                            {enrollment ? "Unenroll" : "Enroll"}
+                                                        </button>
+                                                    );
+                                                })()}
+                                            </StudentOnlyRoute>
                                         </Card.Body>
-                                    </Link>
                                 </Card>
                             </Col>
                         ))}
