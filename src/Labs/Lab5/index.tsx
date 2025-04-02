@@ -2,7 +2,10 @@ import EnvironmentVariables from "./EnvironmentVariables";
 // import PathParameters from "./PathParameters.tsx";
 import QueryParameters from "./ QueryParameters.tsx";
 import WorkingWithObjects from "./WorkingWithObjects.tsx";
-import WorkingWithArrays from "../../Kambaz/Database/WorkingWithArrays.tsx";
+import WorkingWithArrays from "./WorkingWithArrays.tsx";
+import HttpClient from "./HttpClient.tsx";
+import WorkingWithObjectsAsynchronously from "./WorkingWithObjectsAsynchronously.tsx";
+import WorkingWithArraysAsynchronously from "./WorkingWithArraysAsynchronously.tsx";
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export default function Lab5() {
   return (
@@ -19,5 +22,8 @@ export default function Lab5() {
       <QueryParameters />
         <WorkingWithObjects/>
         <WorkingWithArrays/>
+        <HttpClient/>
+        <WorkingWithObjectsAsynchronously/>
+        <WorkingWithArraysAsynchronously/>
     </div>
 );}
