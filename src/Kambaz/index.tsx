@@ -5,44 +5,39 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
 import ProtectedRoute from "./Account/ProtectedRoute";
-import {useSelector} from "react-redux";
 import Session from "./Account/Session";
 
+
 export default function Kambaz() {
-    const {courses} = useSelector((state: any) => state.coursesReducer);
-    console.log("courses from Redux:", courses);
-
-
 
     return (
-            <Session>
+        <Session>
 
-        <div id="wd-kambaz">
-            <KambazNavigation/>
-            <div className="wd-main-content-offset p-4">
-
-
-                <Routes>
-                    <Route path="/" element={<Navigate to="/Kambaz/Account"/>}/>
-                    <Route path="/Account/*" element={<Account/>}/>
-                    <Route path="/Dashboard" element={
-                        <ProtectedRoute>
-                            <Dashboard/>
+            <div id="wd-kambaz">
+                <KambazNavigation/>
+                <div className="wd-main-content-offset p-4">
 
 
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/Kambaz/Account"/>}/>
+                        <Route path="/Account/*" element={<Account/>}/>
+                        <Route path="/Dashboard" element={
+                            <ProtectedRoute>
+                                <Dashboard/>
 
-                        </ProtectedRoute>}/>
 
-                    <Route path="Courses/:cid/*" element={<ProtectedRoute>
-                        <Courses /> </ProtectedRoute>}/>
-                    <Route path="/Calendar" element={<h1>Calendar</h1>}/>
-                    <Route path="/Inbox" element={<h1>Inbox</h1>}/>
-                    <Route path="/History" element={<h1>History</h1>}/>
-                    <Route path="/Help" element={<h1>Help</h1>}/>
+                            </ProtectedRoute>}/>
 
-                </Routes>
+                        <Route path="Courses/:cid/*" element={<ProtectedRoute>
+                            <Courses/> </ProtectedRoute>}/>
+                        <Route path="/Calendar" element={<h1>Calendar</h1>}/>
+                        <Route path="/Inbox" element={<h1>Inbox</h1>}/>
+                        <Route path="/History" element={<h1>History</h1>}/>
+                        <Route path="/Help" element={<h1>Help</h1>}/>
+
+                    </Routes>
+                </div>
             </div>
-        </div>
-            </Session>
+        </Session>
     );
 }
