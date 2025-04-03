@@ -4,15 +4,13 @@ import {MdEditNote} from "react-icons/md";
 import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
 import StudentOnlyRoute from "./Account/StudentOnlyRoute";
 import {useEffect, useState} from "react";
-import {addCourse} from "./Courses/reducer.ts";
 
 import {useDispatch, useSelector} from "react-redux";
-import {addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer.ts";
 import {v4 as uuidv4} from "uuid";
 import * as coursesClient from "./Courses/client.ts";
 import * as userClient from "./Account/client.ts";
 import * as courseClient from "./Courses/client";
-
+import * as enrollmentsClient from "./Courses/enrollmentsclient.ts"
 export default function Dashboard() {
     const [courses, setCourses] = useState<any[]>([]);
     const [enrollments, setEnrollments] = useState<any[]>([]);
@@ -71,6 +69,15 @@ export default function Dashboard() {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const deleteEnrollment = async (cid: string) => {
+        await enrollmentsClient.deleteEnrollment(cid)
+        await fetchEnrolledCourses()
+    };
+     const createEnrollment = async (cid: string) => {
+        await enrollmentsClient.createEnrollment(cid)
+        await fetchEnrolledCourses()
     };
 
     useEffect(() => {
@@ -201,18 +208,10 @@ export default function Dashboard() {
                                                     }
                                                     onClick={() => {
                                                         if (isEnrolled) {
-                                                            const enrollment = enrollments.find(
-                                                                (e) => e._id === course._id
-                                                            );
-                                                            dispatch(deleteEnrollment(enrollment._id));
+
+                                                            deleteEnrollment(course._id);
                                                         } else {
-                                                            dispatch(
-                                                                addEnrollment({
-                                                                    id: uuidv4(),
-                                                                    user: currentUser._id,
-                                                                    course: course._id,
-                                                                })
-                                                            );
+                                                            createEnrollment(course._id)
                                                         }
                                                     }}
                                                     className={`btn ${
