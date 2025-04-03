@@ -5,7 +5,7 @@ import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
 import StudentOnlyRoute from "./Account/StudentOnlyRoute";
 import {useEffect, useState} from "react";
 
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {v4 as uuidv4} from "uuid";
 import * as coursesClient from "./Courses/client.ts";
 import * as userClient from "./Account/client.ts";
@@ -15,7 +15,7 @@ export default function Dashboard() {
     const [courses, setCourses] = useState<any[]>([]);
     const [enrollments, setEnrollments] = useState<any[]>([]);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [showAllClasses, setShowAllClasses] = useState(false);
 
     const [course, setCourse] = useState<any>({
