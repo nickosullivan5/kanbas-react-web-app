@@ -1,8 +1,10 @@
 import {Container, Form, Row, Col, Button} from "react-bootstrap";
 import {Link, useParams} from "react-router";
-import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {addAssignment, updateAssignment} from "./reducer";
+import {addAssignment, setAssignments, updateAssignment} from "./reducer";
+import {useState} from "react";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
     const {cid, aid} = useParams();
@@ -23,6 +25,43 @@ export default function AssignmentEditor() {
     const [onlineEntryOption, setOnlineEntryOption] = useState(assignmentExists?.online_entry_option || ["Text Entry"]);
     const [releaseDate, setReleaseDate] = useState(assignmentExists?.release_date || "2000-00-00");
     const dispatch = useDispatch();
+      const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+            console.log("Assignments from server:", assignments);
+
+    };
+    const createAssignmentForCourse = async () => {
+        if (!cid) return;
+        if (!aid) return;
+        const newAssignment = {
+            title: title,
+            course: cid,
+            description: description,
+            total_points: totalPoints,
+            assignment_group: assignmentGroup,
+            _id: aid,
+            submission_type: submissionType,
+            assign_to: assignTo,
+            due_date: dueDate,
+            due_time: dueTime,
+            num_modules: numModules,
+            online_entry_option: onlineEntryOption,
+            release_date: releaseDate
+        };
+        const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+        dispatch(addAssignment(assignment));
+        console.log("added assignment: ", assignment)
+        fetchAssignments();
+    };
+
+    const saveAssignment = async (assignment: any) => {
+        const updatedAssignment = await assignmentsClient.updateAssignment(assignment);
+        dispatch(updateAssignment(updatedAssignment));
+        console.log("updated assignment: ", assignment)
+        fetchAssignments();
+
+    };
 
     return (
         <Container id="wd-assignments-editor" className="ps-5 pe-5">
@@ -114,7 +153,7 @@ export default function AssignmentEditor() {
                                 _id: aid,
                                 course: courseID,
                                 title: title,
-                                description,
+                                description: description,
                                 total_points: totalPoints,
                                 assignment_group: assignmentGroup,
                                 submission_type: submissionType,
@@ -126,9 +165,9 @@ export default function AssignmentEditor() {
                                 release_date: releaseDate,
                             };
                             if (assignmentExists) {
-                                dispatch(updateAssignment(updatedAssignment));
+                                saveAssignment(updatedAssignment);
                             } else {
-                                dispatch(addAssignment(updatedAssignment));
+                                createAssignmentForCourse();
                             }
                         }}
                         variant="danger"

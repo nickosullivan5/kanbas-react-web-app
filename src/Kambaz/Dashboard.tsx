@@ -1,13 +1,14 @@
-import { Card, Col, FormControl, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { MdEditNote } from "react-icons/md";
+import {Card, Col, FormControl, Row} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {MdEditNote} from "react-icons/md";
 import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
 import StudentOnlyRoute from "./Account/StudentOnlyRoute";
-import { useEffect, useState } from "react";
-import { addCourse } from "./Courses/reducer.ts";
-import { useDispatch, useSelector } from "react-redux";
-import { addEnrollment, deleteEnrollment } from "./Courses/enrollmentsReducer.ts";
-import { v4 as uuidv4 } from "uuid";
+import {useEffect, useState} from "react";
+import {addCourse} from "./Courses/reducer.ts";
+
+import {useDispatch, useSelector} from "react-redux";
+import {addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer.ts";
+import {v4 as uuidv4} from "uuid";
 import * as coursesClient from "./Courses/client.ts";
 import * as userClient from "./Account/client.ts";
 import * as courseClient from "./Courses/client";
@@ -15,7 +16,7 @@ import * as courseClient from "./Courses/client";
 export default function Dashboard() {
     const [courses, setCourses] = useState<any[]>([]);
     const [enrollments, setEnrollments] = useState<any[]>([]);
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const {currentUser} = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
     const [showAllClasses, setShowAllClasses] = useState(false);
 
@@ -47,16 +48,12 @@ export default function Dashboard() {
 
     const addNewCourse = async () => {
         const newCourse = { ...course, _id: uuidv4() };
+        await userClient.createCourse(newCourse);
         setCourses((prevCourses) => [...prevCourses, newCourse]);
-        dispatch(addCourse(newCourse));
-        dispatch(
-            addEnrollment({
-                id: uuidv4(),
-                user: currentUser._id,
-                course: newCourse._id,
-            })
-        );
+        setEnrollments((prevEnrollments) => [...prevEnrollments, newCourse])
+
     };
+
 
     const fetchCourses = async () => {
         try {
@@ -118,34 +115,34 @@ export default function Dashboard() {
                         Add
                     </button>
                 </h5>
-                <br />
+                <br/>
                 <FormControl
                     value={course.name}
                     className="mb-2"
-                    onChange={(e) => setCourse({ ...course, name: e.target.value })}
+                    onChange={(e) => setCourse({...course, name: e.target.value})}
                 />
                 <FormControl
                     value={course.description}
-                    onChange={(e) => setCourse({ ...course, description: e.target.value })}
+                    onChange={(e) => setCourse({...course, description: e.target.value})}
                 />
             </FacultyOnlyRoute>
 
-            <hr />
+            <hr/>
             <h4 id="wd-dashboard-published">
                 {showAllClasses ? "All Courses" : "Enrolled Courses"} ({showAllClasses ? courses.length : enrollments.length})
             </h4>
-            <hr />
+            <hr/>
 
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
                     {(showAllClasses ? courses : enrollments).map((course: any) => (
-                        <Col key={course._id} className="wd-dashboard-course" style={{ width: "300px" }}>
+                        <Col key={course._id} className="wd-dashboard-course" style={{width: "300px"}}>
                             <Card>
                                 <Link
                                     to={`/Kambaz/Courses/${course._id}/Home`}
                                     className="wd-dashboard-course-link text-decoration-none text-dark"
                                 >
-                                    <Card.Img src="/images/NEU.png" variant="top" width="100%" height={160} />
+                                    <Card.Img src="/images/NEU.png" variant="top" width="100%" height={160}/>
                                 </Link>
 
                                 <Card.Body className="card-body">
@@ -154,14 +151,14 @@ export default function Dashboard() {
                                     </Card.Title>
                                     <Card.Text
                                         className="wd-dashboard-course-description overflow-hidden"
-                                        style={{ height: "100px" }}
+                                        style={{height: "100px"}}
                                     >
                                         {course.description}
                                     </Card.Text>
                                     <MdEditNote
                                         color="gray"
                                         size={25}
-                                        style={{ border: "2px solid gray", borderRadius: "4px" }}
+                                        style={{border: "2px solid gray", borderRadius: "4px"}}
                                     />
 
                                     <FacultyOnlyRoute>

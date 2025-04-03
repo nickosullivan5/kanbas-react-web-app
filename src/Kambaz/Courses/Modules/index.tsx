@@ -28,13 +28,13 @@ export default function Modules() {
         dispatch(addModule(module));
     };
     const removeModule = async (moduleId: string) => {
-    await modulesClient.deleteModule(moduleId);
-    dispatch(deleteModule(moduleId));
-  };
-  const saveModule = async (module: any) => {
-    await modulesClient.updateModule(module);
-    dispatch(updateModule(module));
-  };
+        await modulesClient.deleteModule(moduleId);
+        dispatch(deleteModule(moduleId));
+    };
+    const saveModule = async (module: any) => {
+        await modulesClient.updateModule(module);
+        dispatch(updateModule(module));
+    };
 
 
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function Modules() {
                                                      }
                                                      onKeyDown={(e) => {
                                                          if (e.key === "Enter") {
-                                                               saveModule({ ...module, editing: false });
+                                                             saveModule({...module, editing: false});
 
                                                          }
                                                      }}
@@ -82,7 +82,7 @@ export default function Modules() {
 
                                         <ModuleControlButtons
                                             moduleId={module._id}
-                                           deleteModule={(moduleId) => removeModule(moduleId)}
+                                            deleteModule={(moduleId) => removeModule(moduleId)}
 
                                             editModule={(moduleId) => dispatch(editModule(moduleId))}/>
                                     </FacultyOnlyRoute>
