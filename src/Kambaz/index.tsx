@@ -6,6 +6,7 @@ import Courses from "./Courses";
 import "./styles.css";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import {useSelector} from "react-redux";
+import Session from "./Account/Session";
 
 export default function Kambaz() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
@@ -14,6 +15,8 @@ export default function Kambaz() {
 
 
     return (
+            <Session>
+
         <div id="wd-kambaz">
             <KambazNavigation/>
             <div className="wd-main-content-offset p-4">
@@ -40,5 +43,6 @@ export default function Kambaz() {
                 </Routes>
             </div>
         </div>
+            </Session>
     );
 }
