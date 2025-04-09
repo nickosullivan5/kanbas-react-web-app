@@ -7,13 +7,29 @@ import AssignmentEditor from "./Assignments/Editor.tsx";
 import {FaAlignJustify} from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import * as client from "../Account/client.ts";
 
 export default function Courses() {
   const { pathname } = useLocation();
   const {courses} = useSelector((state: any) => state.coursesReducer);
+  const [users, setUsers] = useState<any[]>([]);
+  const fetchUsers = async () => {
+    const users = await client.findAllUsers();
+    setUsers(users);
+  };
 
+  //add in people filter for their enrollments later on (currently the people table for the course is showing just every person).
+  // const [enrollments, setEnrollments] = useState<any[]>([]);
+  // const fetchEnrollments = async () => {
+  //   const enrollments = await client.findAllEnrollments();
+  //   setEnrollments(enrollments);
+  // };
   const { cid } = useParams();
   const course = courses.find((course: { _id: string | undefined; }) => course._id === cid);
+    useEffect(() => {
+    fetchUsers();
+  }, [cid]);
     return (
       <div id="wd-courses" className="ps-4e">
           <h5 className="text-danger ps-3">
@@ -34,7 +50,7 @@ export default function Courses() {
                           <Route path="Modules" element={<Modules/>}/>
                           <Route path="Assignments" element={<Assignments/>}/>
                           <Route path="Assignments/:aid" element={<AssignmentEditor/>}/>
-                          <Route path="People" element={<PeopleTable/>}/>
+                          <Route path="People" element={<PeopleTable  users={users}/>}/>
                           <Route path="Piazza" element={<h2>Piazza</h2>}/>
                           <Route path="Zoom" element={<h2>Zoom</h2>}/>
                           <Route path="Quizzes" element={<h2>Quizzes</h2>}/>
