@@ -4,12 +4,9 @@ import {MdEditNote} from "react-icons/md";
 import FacultyOnlyRoute from "./Account/FacultyOnlyRoute";
 import StudentOnlyRoute from "./Account/StudentOnlyRoute";
 import {useEffect, useState} from "react";
-
-import { useSelector} from "react-redux";
-import {v4 as uuidv4} from "uuid";
-import * as coursesClient from "./Courses/client.ts";
-import * as userClient from "./Account/client.ts";
 import * as courseClient from "./Courses/client";
+import { useSelector} from "react-redux";
+import * as userClient from "./Account/client.ts";
 import * as enrollmentsClient from "./Courses/enrollmentsclient.ts"
 export default function Dashboard() {
     const [courses, setCourses] = useState<any[]>([]);
@@ -45,8 +42,10 @@ export default function Dashboard() {
     };
 
     const addNewCourse = async () => {
-        const newCourse = { ...course, _id: uuidv4() };
-        await userClient.createCourse(newCourse);
+        // const newCourse = { ...course, _id: uuidv4() };
+        // await userClient.createCourse(newCourse);
+        const newCourse = await courseClient.createCourse(course);
+
         setCourses((prevCourses) => [...prevCourses, newCourse]);
         setEnrollments((prevEnrollments) => [...prevEnrollments, newCourse])
 
@@ -55,7 +54,7 @@ export default function Dashboard() {
 
     const fetchCourses = async () => {
         try {
-            const fetchedCourses = await coursesClient.fetchAllCourses();
+            const fetchedCourses = await courseClient.fetchAllCourses();
             setCourses(fetchedCourses);
         } catch (error) {
             console.error(error);
