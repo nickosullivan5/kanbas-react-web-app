@@ -130,6 +130,7 @@ export default function Assignments() {
                             </div>
                             <GreenCheckmark/>
                             <IoEllipsisVertical className="fs-4 ms-2"/>
+                            <FacultyOnlyRoute>
                            <FaRegTrashAlt
                                     onClick={() => {
                                         setSelectedAssignmentId(assignment._id); // Store selected ID
@@ -137,7 +138,7 @@ export default function Assignments() {
                                     }}
                                     style={{ cursor: "pointer" }}
                                 />
-
+</FacultyOnlyRoute>
                                <AssignmentDeletion
                                 show={show}
                                 handleClose={() => setShow(false)}

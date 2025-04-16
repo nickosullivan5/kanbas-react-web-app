@@ -19,11 +19,11 @@ export default function AssignmentEditor() {
     const [assignmentGroup, setAssignmentGroup] = useState(assignmentExists?.assignment_group || "ASSIGNMENTS");
     const [submissionType, setSubmissionType] = useState(assignmentExists?.submission_type || "Online");
     const [assignTo, setAssignTo] = useState(assignmentExists?.assign_to || "Everyone");
-    const [dueDate, setDueDate] = useState(assignmentExists?.due_date || "2000-00-00");
+    const [dueDate, setDueDate] = useState(assignmentExists?.due_date || "2000-01-01");
     const [dueTime] = useState(assignmentExists?.due_time || "00:00");
     const [numModules] = useState(assignmentExists?.num_modules || "1");
     const [onlineEntryOption, setOnlineEntryOption] = useState(assignmentExists?.online_entry_option || ["Text Entry"]);
-    const [releaseDate, setReleaseDate] = useState(assignmentExists?.release_date || "2000-00-00");
+    const [releaseDate, setReleaseDate] = useState(assignmentExists?.release_date || "2000-01-01");
     const dispatch = useDispatch();
       const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
