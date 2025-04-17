@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import * as coursesClient from "../client.ts";
+import FacultyOnlyRoute from "../../Account/FacultyOnlyRoute.tsx"
 import {
   Container,
   Card,
@@ -14,6 +15,8 @@ import {
   Col,
   Badge
 } from "react-bootstrap";
+import { FaExclamation } from "react-icons/fa";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 export default function QuizSession() {
   const { cid, qid } = useParams();
@@ -119,27 +122,44 @@ export default function QuizSession() {
     <Container className="my-4" style={{ maxWidth: "800px", color: "#333" }}>
       <Card className="mb-4" style={{ border: "1px solid #ddd", borderRadius: "0", boxShadow: "none" }}>
         <Card.Header
-          as="h2"
+          as="h3"
           style={{
-            backgroundColor: "#f8f9fa",
-            color: "#333",
+            backgroundColor: "#ffffff",
+            color: "#4c4c4c",
             borderBottom: "1px solid #ddd",
             borderRadius: "0"
           }}
         >
           {quiz.title}
+
         </Card.Header>
-        <Card.Body style={{ padding: "1.5rem" }}>
+        <FacultyOnlyRoute>
+
+          <Card.Header
+          as="h6"
+          style={{
+            backgroundColor: "rgba(255,147,147,0.63)",
+            color: "#970000",
+            borderBottom: "1px solid #ddd",
+            borderRadius: "0",
+
+          }} className="pt-2"
+        >
+            <AiOutlineExclamationCircle ></AiOutlineExclamationCircle > This is a preview of the published version of the quiz
+          </Card.Header>
+        </FacultyOnlyRoute>
+
+        <Card.Body style={{ padding: "1.5rem" }} className="pt-5">
           {/* Current Question */}
           {currentQuestion && (
-            <Card className="mb-4" style={{ border: "1px solid #ddd", borderRadius: "0" }}>
-              <Card.Header style={{ backgroundColor: "#f8f9fa", borderBottom: "1px solid #ddd" }}>
+            <Card className="mb-4" style={{ border: "1px solid #ddd", borderRadius: "0px" }}>
+              <Card.Header style={{ backgroundColor: "#dfdfdf", borderBottom: "1px solid #ddd" }}>
                 <h5 style={{ margin: "0" }}>
                   Question {currentIndex + 1}{" "}
                   <Badge
                     bg="secondary"
                     style={{
-                      backgroundColor: "#777",
+                      backgroundColor: "#8e8d8d",
                       borderRadius: "0",
                       fontSize: "0.75rem",
                       fontWeight: "normal"
@@ -173,7 +193,7 @@ export default function QuizSession() {
                             label={choice}
                             checked={answers[currentIndex] === idx}
                             onChange={() => handleSelectAnswer(currentIndex, idx)}
-                            style={{ color: "#333" }}
+                            style={{ color: "#373737" }}
                           />
                         </ListGroup.Item>
                       ))}
@@ -236,7 +256,7 @@ export default function QuizSession() {
           <Row className="g-2 mb-4">
             <Col md={4}>
               <Button
-                variant="outline-secondary"
+                variant="light"
                 onClick={() =>
                   setCurrentIndex((prev) => Math.max(prev - 1, 0))
                 }
@@ -253,7 +273,7 @@ export default function QuizSession() {
             </Col>
             <Col md={4} className="mx-auto">
               <Button
-                variant="outline-secondary"
+                variant="light"
                 onClick={() =>
                   setCurrentIndex((prev) =>
                     Math.min(prev + 1, questions.length - 1)
@@ -263,8 +283,8 @@ export default function QuizSession() {
                 className="w-100"
                 style={{
                   borderRadius: "0",
-                  borderColor: "#ddd",
-                  color: "#333"
+                  borderColor: "#b1b1b1",
+                  color: "#3c3c3c"
                 }}
               >
                 Next
@@ -274,7 +294,7 @@ export default function QuizSession() {
               <Button
                 variant="danger"
                 onClick={handleSubmit}
-                className="w-100"
+                className="w-100 wd-bg-color-red"
                 disabled={Object.keys(answers).length !== questions.length}
                 style={{ borderRadius: "0" }}
               >
