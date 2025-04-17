@@ -1,0 +1,219 @@
+[
+  {
+    "_id": "0",
+    "course": "RS101",
+    "title": "Introduction to Design",
+    "description": "This quiz covers the basics of cell structure and functions.",
+    "quizType": "Graded Quiz",
+    "points": 20,
+    "assignmentGroup": "Quizzes",
+    "shuffleAnswers": true,
+    "timeLimit": 20,
+    "multipleAttempts": false,
+    "howManyAttempts": 0,
+    "showCorrectAnswers": "After last attempt",
+    "accessCode": "",
+    "oneQuestionAtATime": true,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "dueDate": "2025-04-20T23:59:00Z",
+    "availableDate": "2025-04-15T08:00:00Z",
+    "untilDate": "2025-04-21T23:59:00Z",
+    "published": true,
+    "questions": [
+      {
+        "type": "Multiple Choice",
+        "points": 20,
+        "questionText": "What is 5 + 5?",
+        "choices": ["3", "10", "15", "50"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "type": "True Or False",
+        "points": 20,
+        "questionText": "Can rockets go into space?",
+        "correctAnswer": true
+      },
+      {
+        "type": "Fill In The Blank",
+        "points": 20,
+        "questionText": "What kind of fuel to rockets use?",
+        "possibleAnswers": ["rocket fuel"]
+      }
+    ]
+  },
+  {
+    "_id": "1",
+    "course": "RS101",
+    "title": "Algebra Practice Quiz",
+    "description": "<p>This practice quiz helps students brush up on basic algebra.</p>",
+    "quizType": "Practice Quiz",
+    "points": 15,
+    "assignmentGroup": "Assignments",
+    "shuffleAnswers": true,
+    "timeLimit": 20,
+    "multipleAttempts": true,
+    "howManyAttempts": 3,
+    "showCorrectAnswers": "Immediately after each attempt",
+    "accessCode": "",
+    "oneQuestionAtATime": true,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "dueDate": "2025-04-22T23:59:00Z",
+    "availableDate": "2025-04-18T08:00:00Z",
+    "untilDate": "2025-04-23T23:59:00Z",
+    "published": true,
+        "questions": [
+      {
+        "type": "Multiple Choice",
+        "points": 20,
+        "questionText": "What is 5 + 5?",
+        "choices": ["3", "10", "15", "50"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "type": "True Or False",
+        "points": 20,
+        "questionText": "Can rockets go into space?",
+        "correctAnswer": true
+      },
+      {
+        "type": "Fill In The Blank",
+        "points": 20,
+        "questionText": "What kind of fuel to rockets use?",
+        "possibleAnswers": ["rocket fuel"]
+      }
+    ]
+
+  },
+  {
+    "_id": "2",
+    "course": "RS102",
+    "title": "World History Survey",
+    "description": "<p>Please complete this ungraded survey to share your prior knowledge of world history.</p>",
+    "quizType": "Ungraded Survey",
+    "points": 0,
+    "assignmentGroup": "Project",
+    "shuffleAnswers": false,
+    "timeLimit": 10,
+    "multipleAttempts": false,
+    "howManyAttempts": 0,
+    "showCorrectAnswers": "Never",
+    "accessCode": "history2025",
+    "oneQuestionAtATime": false,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "dueDate": "2025-04-25T23:59:00Z",
+    "availableDate": "2025-04-20T08:00:00Z",
+    "untilDate": "2025-04-26T23:59:00Z",
+    "published": false,
+        "questions": [
+      {
+        "type": "Multiple Choice",
+        "points": 20,
+        "questionText": "What is 5 + 5?",
+        "choices": ["3", "10", "15", "50"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "type": "True Or False",
+        "points": 20,
+        "questionText": "Can rockets go into space?",
+        "correctAnswer": true
+      },
+      {
+        "type": "Fill In The Blank",
+        "points": 20,
+        "questionText": "What kind of fuel to rockets use?",
+        "possibleAnswers": ["rocket fuel"]
+      }
+    ]
+
+  },
+  {
+    "_id": "3",
+    "course": "RS102",
+    "title": "Final Exam - Chemistry",
+    "description": "<p>The final exam will assess your understanding of the semester's content. Make sure to review all materials.</p>",
+    "quizType": "Graded Quiz",
+    "points": 100,
+    "assignmentGroup": "Exams",
+    "shuffleAnswers": true,
+    "timeLimit": 60,
+    "multipleAttempts": false,
+    "howManyAttempts": 0,
+    "showCorrectAnswers": "After due date",
+    "accessCode": "CHEMFINAL",
+    "oneQuestionAtATime": true,
+    "webcamRequired": true,
+    "lockQuestionsAfterAnswering": true,
+    "dueDate": "2025-05-01T10:00:00Z",
+    "availableDate": "2025-05-01T08:00:00Z",
+    "untilDate": "2025-05-01T11:30:00Z",
+      "questions": [
+      {
+        "type": "Multiple Choice",
+        "points": 20,
+        "questionText": "What is 5 + 5?",
+        "choices": ["3", "10", "15", "50"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "type": "True Or False",
+        "points": 20,
+        "questionText": "Can rockets go into space?",
+        "correctAnswer": true
+      },
+      {
+        "type": "Fill In The Blank",
+        "points": 20,
+        "questionText": "What kind of fuel to rockets use?",
+        "possibleAnswers": ["rocket fuel"]
+      }
+    ]
+
+  },
+  {
+    "_id": "4",
+    "course": "RS102",
+    "title": "Student Feedback Survey",
+    "description": "<p>We value your input! Please complete this survey about your experience in the course.</p>",
+    "quizType": "Graded Survey",
+    "points": 5,
+    "assignmentGroup": "Assignments",
+    "shuffleAnswers": false,
+    "timeLimit": 15,
+    "multipleAttempts": false,
+    "howManyAttempts": 0,
+    "showCorrectAnswers": "Immediately after submission",
+    "accessCode": "",
+    "oneQuestionAtATime": false,
+    "webcamRequired": false,
+    "lockQuestionsAfterAnswering": false,
+    "dueDate": "2025-04-30T23:59:00Z",
+    "availableDate": "2025-04-25T08:00:00Z",
+    "untilDate": "2025-05-01T23:59:00Z",
+    "published": true,
+    "questions": [
+      {
+        "type": "Multiple Choice",
+        "points": 20,
+        "questionText": "What is 5 + 5?",
+        "choices": ["3", "10", "15", "50"],
+        "correctAnswerIndex": 2
+      },
+      {
+        "type": "True Or False",
+        "points": 20,
+        "questionText": "Can rockets go into space?",
+        "correctAnswer": true
+      },
+      {
+        "type": "Fill In The Blank",
+        "points": 20,
+        "questionText": "What kind of fuel to rockets use?",
+        "possibleAnswers": ["rocket fuel"]
+      }
+    ]
+  }
+]
