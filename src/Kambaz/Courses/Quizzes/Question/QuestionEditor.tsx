@@ -30,14 +30,14 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
             className="rounded-0"
         >
             {/* Shared Fields */}
-            <div style={{ display: "flex", gap: "1rem" }}>
-                <div style={{ flex: 1 }}>
+            <div style={{display: "flex", gap: "1rem"}}>
+                <div style={{flex: 1}}>
                     <label>Question</label>
                     <input
                         type="text"
                         value={editingQuestion.questionText}
                         onChange={(e) => updateField("questionText", e.target.value)}
-                        style={{ width: "100%", padding: "0.5rem" }}
+                        style={{width: "100%", padding: "0.5rem"}}
                     />
                 </div>
                 <div>
@@ -46,7 +46,7 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
                         type="number"
                         value={editingQuestion.points}
                         onChange={(e) => updateField("points", parseInt(e.target.value))}
-                        style={{ width: "100%", padding: "0.5rem" }}
+                        style={{width: "100%", padding: "0.5rem"}}
                     />
                 </div>
             </div>
@@ -55,19 +55,23 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
                 <label>Question Type</label>
                 <select
                     value={editingQuestion.type}
-                    onChange={(e) => updateField("type", e.target.value)}
-                    style={{ width: "100%", padding: "0.5rem" }}
+                    onChange={(e) => {
+                        const newType = e.target.value;
+                        const newTitle = e.target.options[e.target.selectedIndex].text;
+                        updateField("type", newType);
+                        updateField("title", newTitle);
+                    }}
+                    style={{width: "100%", padding: "0.5rem"}}
                 >
-                    <option value="Multiple Choice">Multiple Choice</option>
-                    <option value="True Or False">True/False</option>
-                    <option value="Fill In The Blank">Fill in the Blank</option>
+                    <option value="multiple_choice">Multiple Choice</option>
+                    <option value="true_false">True Or False</option>
+                    <option value="fill_in_blank">Fill In The Blank</option>
                 </select>
             </div>
 
 
-
             {/* Dynamic Sub-Editor */}
-            {editingQuestion.type === "Multiple Choice" && (
+            {editingQuestion.type === "multiple_choice" && (
                 <MultipleChoiceQuestionEditor
                     choices={editingQuestion.choices || []}
                     correctAnswerIndex={editingQuestion.correctAnswerIndex}
@@ -81,7 +85,7 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
                 />
             )}
 
-            {editingQuestion.type === "True Or False" && (
+            {editingQuestion.type === "true_false" && (
                 <TrueFalseQuestionEditor
                     correctAnswer={editingQuestion.correctAnswer}
                     onChange={(newAnswer) =>
@@ -93,7 +97,7 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
                 />
             )}
 
-            {editingQuestion.type === "Fill In The Blank" && (
+            {editingQuestion.type === "fill_in_blank" && (
                 <FillInTheBlankQuestionEditor
                     answers={editingQuestion.possibleAnswers || []}
                     onChange={(newAnswers) =>
@@ -105,7 +109,7 @@ export default function QuestionsEditor({ question, onCancel, onSave }) {
                 />
             )}
 
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+            <div style={{display: "flex", gap: "1rem", justifyContent: "flex-end"}}>
                 <button type="button" onClick={onCancel}>
                     Cancel
                 </button>

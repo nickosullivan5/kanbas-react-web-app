@@ -8,9 +8,10 @@ import {FaPencil} from "react-icons/fa6";
 import QuestionEditor from "./Question/QuestionEditor.tsx";
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
+import {FaTrash} from "react-icons/fa";
 
 export default function QuizEditor() {
-       const { cid, qid } = useParams();
+    const {cid, qid} = useParams();
     const [activeTab, setActiveTab] = useState("details");
     const [quizzes, setQuizzes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function QuizEditor() {
     const fetchQuizzes = async () => {
         const getQuizzes = await coursesClient.findQuizzesForCourse(cid as string);
         setQuizzes(getQuizzes);
+        console.log("quizzes from server: ", getQuizzes)
         setLoading(false);
     };
 
@@ -76,7 +78,7 @@ export default function QuizEditor() {
         setPoints(questions.reduce((acc: Number, q: any) => acc + q.points, 0));
     };
 
-const updateQuizForCourse = async (publish: boolean = published) => {
+    const updateQuizForCourse = async (publish: boolean = published) => {
         const updatedQuiz = {
             ...quizExists,
             title: title,
@@ -112,7 +114,7 @@ const updateQuizForCourse = async (publish: boolean = published) => {
     if (!quizExists) {
         return <div className="text-center mt-5 text-danger">Quiz not found.</div>;
     }
-
+    console.log("questions: ", questions)
 
     return (
         <div className="p-4">
@@ -346,17 +348,6 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                             </Col>
                         </Form.Group>
 
-                        {/*<Form.Group as={Row} className="mb-4">*/}
-                        {/*    <Form.Label column sm={3}>Published</Form.Label>*/}
-                        {/*    <Col sm={9}>*/}
-                        {/*        <Form.Check*/}
-                        {/*            type="checkbox"*/}
-                        {/*            checked={published}*/}
-                        {/*            onChange={(e) => setPublished(e.target.checked)}*/}
-                        {/*        />*/}
-                        {/*    </Col>*/}
-                        {/*</Form.Group>*/}
-
                         <div className="d-flex gap-2">
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
                                 <Button variant="primary" onClick={() => updateQuizForCourse()}>Save</Button>
@@ -364,7 +355,7 @@ const updateQuizForCourse = async (publish: boolean = published) => {
 
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
                                 <Button variant="danger" onClick={(e) => {
-                                        updateQuizForCourse(true); // pass true to indicate publish
+                                    updateQuizForCourse(true); // pass true to indicate publish
 
                                 }}>Save & Publish</Button>
                             </Link>
@@ -381,10 +372,10 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <span
-                                className="text-muted-foreground">Total Points: <b>{questions.reduce((acc, q) => acc + q.points, 0)}</b></span>
+                                className="text-muted-foreground">Total Points: <b>{points}</b></span>
                         </div>
 
-                        {questions.map((q, index) => (
+                        {questions.map((q: any, index) => (
                             <div key={index} className="rounded-xl border p-4 shadow-sm bg-white space-y-2">
                                 {editingQuestionIndex === index ? (
                                     <QuestionEditor
@@ -402,13 +393,13 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                                         <div className="flex justify-between items-center">
                                             <h3 className="text-lg font-medium">{q.questionText}</h3>
                                             <span className="text-muted-foreground text-sm">
-                                                {q.type}: <b>{q.points}</b> pts
+                                                {q.title}: <b>{q.points}</b> pts
                                             </span>
                                         </div>
 
-                                        {q.type === "Multiple Choice" && (
+                                        {q.type === "multiple_choice" && (
                                             <ul className="pl-6 space-y-1">
-                                                {q.choices.map((choice, i) => (
+                                                {q.choices.map((choice: any, i) => (
                                                     <li key={i} className="flex items-center gap-2">
                                                         {i === q.correctAnswerIndex && (
                                                             <AiOutlineCheck className="h-4 w-4 text-green-600"/>
@@ -419,23 +410,25 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                                             </ul>
                                         )}
 
-                                        {q.type === "True Or False" && (
-                                            <p className="text-muted-foreground">
-                                                Correct Answer: <span
-                                                className="font-medium">{q.correctAnswer ? "True" : "False"}</span>
-                                            </p>
-                                        )}
+                                    {q.type === "true_false" && (
+                                        <p className="text-muted-foreground">
+                                            Correct Answer: <span
+                                            className="font-medium">{q.correctAnswer ? "True" : "False"}</span>
+                                        </p>
+                                    )}
 
-                                        {q.type === "Fill In The Blank" && (
-                                            <div>
-                                                <p className="text-muted-foreground">Accepted Answers:</p>
-                                                <ul className="list-disc pl-6">
-                                                    {q.possibleAnswers.map((ans, i) => (
-                                                        <li key={i}>{ans}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
+                                    {q.type === "fill_in_blank" && (
+                                        <div>
+                                            <p className="text-muted-foreground">Accepted Answers:</p>
+                                            <ul className="list-disc pl-6">
+                                                {q.possibleAnswers.map((ans, i) => (
+                                                    <li key={i}>{ans}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                        <span>
+
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -444,14 +437,46 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                                         >
                                             <FaPencil className="w-4 h-4"/>
                                             Edit
+
+                                    </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-sm text-muted-foreground hover:text-black flex items-center gap-md-3 ml-auto btn-outline rounded-0"
+                                            onClick={() => {const updated = [...questions];
+                                                updated.splice(index, 1); // Remove one item at the given index
+                                                setQuestions(updated);
+                                                setEditingQuestionIndex(null);}}>
+
+                                            <FaTrash className="w-4 h-4"/>
+                                            Delete
+
                                         </Button>
+ </span>
                                     </>
                                 )}
                             </div>
                         ))}
 
                         <div className="pt-3 pb-4 ">
-                            <Button variant="light" className="w-full rounded-0 btn-outline-dark">
+                            <Button
+                                variant="light"
+                                className="w-full rounded-0 btn-outline-dark"
+                                onClick={() => {
+                                    const updated = [...questions];
+                                    const defaultQuestion = {
+                                        type: "multiple_choice",
+                                        title: "Multiple Choice",
+                                        points: 20,
+                                        questionText: "New Question",
+                                        choices: [],
+                                        correctAnswerIndex: 0
+                                    };
+                                    updated.push(defaultQuestion);
+                                    setQuestions(updated);
+                                    setEditingQuestionIndex(null);
+                                }}
+                            >
                                 + New Question
                             </Button>
                         </div>
@@ -460,7 +485,8 @@ const updateQuizForCourse = async (publish: boolean = published) => {
                             <hr></hr>
                             <div className="pt-2 fs-3">
                                 <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                    <Button variant="danger" className="rounded-0">Save</Button>
+                                    <Button variant="danger" className="rounded-0"
+                                            onClick={() => updateQuizForCourse()}>Save</Button>
                                 </Link>
 
                                 <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
