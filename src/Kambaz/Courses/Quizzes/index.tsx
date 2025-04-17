@@ -5,20 +5,21 @@ import FacultyOnlyRoute from "../../Account/FacultyOnlyRoute.tsx";
 import StudentOnlyRoute from "../../Account/StudentOnlyRoute.tsx";
 import {GoPlus} from "react-icons/go";
 import {Link} from "react-router-dom";
-import {v4 as uuidv4} from "uuid";
+import {useNavigate} from "react-router-dom";
 import {BsGripVertical, BsPlus} from "react-icons/bs";
 import {FaCaretDown, FaRegEdit} from "react-icons/fa";
 import {IoEllipsisVertical} from "react-icons/io5";
 import GreenCheckmark from "../Modules/GreenCheckmark.tsx";
-import {useState} from "react";
-import quizzes from "./dummy.json";
+import {useEffect, useState} from "react";
 import {AiOutlineStop} from "react-icons/ai";
 import {useSelector} from "react-redux";
-
+import {v4 as uuidv4} from "uuid";
+import * as coursesClient from "../client";
+import * as quizzesClient from "./client";
 export default function Quizzes() {
+    const navigate = useNavigate()
     const {cid} = useParams();
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-
     const [show, setShow] = useState(false);
     const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
 
@@ -34,16 +35,66 @@ export default function Quizzes() {
 
     const dialogTitle = "Quiz Options";
 
-    const removeQuiz = () => {
+
+    const [quizzes, setQuizzes] = useState<any[]>([]);
+
+
+
+
+    const fetchQuizzes = async () => {
+        const getQuizzes = await coursesClient.findQuizzesForCourse(cid as string);
+        setQuizzes(getQuizzes);
+        console.log("Quizzes from server:", getQuizzes);
+        // console.log("quizzes state:", quizzes);
+    };
+
+    const createQuizForCourse = async () => {
+        if (!cid) return;
+        // const qid =  // generate when button is clicked
+
+        const newQuiz = {
+            title: "New Quiz",
+            course: cid,
+            description: "New Quiz Description",
+            quizType: "Graded Quiz",
+            points: 0,
+            _id: uuidv4(),
+            assignmentGroup: "Quizzes",
+            shuffleAnswers: true,
+            timeLimit: 20,
+            multipleAttempts: false,
+            howManyAttempts: 0,
+            showCorrectAnswers: "Immediately after each attempt",
+            accessCode: "",
+            oneQuestionAtATime: true,
+            webcamRequired: false,
+            lockQuestionsAfterAnswering: false,
+            dueDate: "2025-01-01",
+            availableDate: "2025-01-01",
+            untilDate: "2025-01-01",
+            published: false,
+            questions: []
+        };
+        const quiz = await coursesClient.createQuizForCourse(cid, newQuiz);
+        console.log("added quiz: ", quiz)
+        fetchQuizzes();
+        navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}`);
+
+    };
+    const removeQuiz = async () => {
         if (selectedQuizId) {
+            await quizzesClient.deleteQuiz(selectedQuizId);
             console.log("Removing quiz:", selectedQuizId);
-            // Implement your delete logic here (API call, state update, etc.)
+            fetchQuizzes();
         }
     };
 
-    const publishQuiz = () => {
+    const publishQuiz = async () => {
+        const selectedQuiz = quizzes.find(q => q._id === selectedQuizId);
+        const updatedQuiz = { ...selectedQuiz, published: !selectedQuiz.published };
+        await quizzesClient.updateQuiz(updatedQuiz);
         console.log(`Publish/unpublish quiz with ID: ${selectedQuizId}`);
-        // Toggle publish status logic here
+        fetchQuizzes();
     };
 
     const getAvailabilityStatus = (quiz: any) => {
@@ -62,6 +113,10 @@ export default function Quizzes() {
         }
     };
 
+    useEffect(() => {
+        fetchQuizzes();
+    }, []);
+
     return (
         <Container>
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -75,11 +130,12 @@ export default function Quizzes() {
                 </div>
                 <FacultyOnlyRoute>
                     <div className="d-flex">
-                        <Link to={`/Kambaz/Courses/${cid}/Quizzes/${uuidv4()}`}>
-                            <button className="rounded-0 border-0 bg-danger text-white">
+                        {/*<Link to={`/Kambaz/Courses/${cid}/Quizzes/${qid}`}>*/}
+                            <button className="rounded-0 border-0 bg-danger text-white"
+                            onClick={() => {createQuizForCourse()}}>
                                 <GoPlus/> Quiz
                             </button>
-                        </Link>
+                        {/*</Link>*/}
                     </div>
                 </FacultyOnlyRoute>
             </div>
@@ -162,7 +218,7 @@ export default function Quizzes() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                    <Button variant="warning" onClick={publishQuiz}>Publish/Unpublish</Button>
+                    <Button variant="warning" onClick={() => {publishQuiz(); handleClose();}}>Publish/Unpublish</Button>
                     <Button variant="danger" onClick={() => {
                         removeQuiz();
                         handleClose();

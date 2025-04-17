@@ -18,13 +18,6 @@ export default function Courses() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const [users, setUsers] = useState<any[]>([]);
 
-
-    //add in people filter for their enrollments later on (currently the people table for the course is showing just every person).
-    // const [enrollments, setEnrollments] = useState<any[]>([]);
-    // const fetchEnrollments = async () => {
-    //   const enrollments = await client.findAllEnrollments();
-    //   setEnrollments(enrollments);
-    // };
     const {cid} = useParams();
     const fetchUsers = async () => {
         if (!cid) return; // Or show an error message
