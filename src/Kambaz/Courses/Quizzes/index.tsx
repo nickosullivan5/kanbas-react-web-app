@@ -168,7 +168,12 @@ export default function Quizzes() {
                                 </Link>
                             </FacultyOnlyRoute>
                             <div className="flex-grow-1">
-                                <div><b>{quiz.title}</b></div>
+                             <Link
+                              to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/Session`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
+                              <div><b>{quiz.title}</b></div>
+                            </Link>
                                 <small className="text-muted d-block mb-1">
                                     {getAvailabilityStatus(quiz)}
                                 </small>

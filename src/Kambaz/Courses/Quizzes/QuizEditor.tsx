@@ -16,7 +16,7 @@ export default function QuizEditor() {
     const [quizzes, setQuizzes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [points, setPoints] = useState(0);
-    const [courseID] = useState(cid); // Ensure this is unconditionally used
+    // const [courseID] = useState(cid); // Ensure this is unconditionally used
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -354,7 +354,7 @@ export default function QuizEditor() {
                             </Link>
 
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                <Button variant="danger" onClick={(e) => {
+                                <Button variant="danger" onClick={() => {
                                     updateQuizForCourse(true); // pass true to indicate publish
 
                                 }}>Save & Publish</Button>
@@ -381,7 +381,7 @@ export default function QuizEditor() {
                                     <QuestionEditor
                                         question={q}
                                         onCancel={() => setEditingQuestionIndex(null)}
-                                        onSave={(updatedQuestion) => {
+                                        onSave={(updatedQuestion: any) => {
                                             const updated = [...questions];
                                             updated[index] = updatedQuestion;
                                             setQuestions(updated);
@@ -399,7 +399,7 @@ export default function QuizEditor() {
 
                                         {q.type === "multiple_choice" && (
                                             <ul className="pl-6 space-y-1">
-                                                {q.choices.map((choice: any, i) => (
+                                                {q.choices.map((choice: any, i: any) => (
                                                     <li key={i} className="flex items-center gap-2">
                                                         {i === q.correctAnswerIndex && (
                                                             <AiOutlineCheck className="h-4 w-4 text-green-600"/>
