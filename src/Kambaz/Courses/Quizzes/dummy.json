@@ -69,7 +69,7 @@
         "points": 20,
         "questionText": "What is 5 + 5?",
         "choices": ["3", "10", "15", "50"],
-        "correctAnswerIndex": 2
+        "correctAnswerIndex": 1
       },
       {
         "type": "True Or False",
@@ -113,7 +113,7 @@
         "points": 20,
         "questionText": "What is 5 + 5?",
         "choices": ["3", "10", "15", "50"],
-        "correctAnswerIndex": 2
+        "correctAnswerIndex": 1
       },
       {
         "type": "True Or False",
@@ -156,7 +156,7 @@
         "points": 20,
         "questionText": "What is 5 + 5?",
         "choices": ["3", "10", "15", "50"],
-        "correctAnswerIndex": 2
+        "correctAnswerIndex": 1
       },
       {
         "type": "True Or False",
@@ -200,7 +200,7 @@
         "points": 20,
         "questionText": "What is 5 + 5?",
         "choices": ["3", "10", "15", "50"],
-        "correctAnswerIndex": 2
+        "correctAnswerIndex": 1
       },
       {
         "type": "True Or False",

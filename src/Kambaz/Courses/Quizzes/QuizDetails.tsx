@@ -18,7 +18,7 @@ export default function QuizDetails() {
     const [title, setTitle] = useState(quizExists?.title || "Quiz _");
     const [description, setDescription] = useState(quizExists?.description || "The QUIZ is available online.");
     const [quizType, setQuizType] = useState(quizExists?.quizType || "Graded Quiz");
-    const [points, setPoints] = useState(quizExists?.points || 0);
+    const [points, setPoints] = useState(quizExists?.questions.reduce((acc, q) => acc + q.points, 0) || 0);
     const [assignmentGroup, setAssignmentGroup] = useState(quizExists?.assignmentGroup || "Quizzes ");
     const [shuffleAnswers, setShuffleAnswers] = useState(quizExists?.shuffleAnswers || "Yes");
     const [timeLimit, setTimeLimit] = useState(quizExists?.timeLimit || 20);

@@ -5,6 +5,8 @@ import {Button, Col, Form, Row, Tab, Tabs} from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {AiOutlineCheck, AiOutlineStop} from "react-icons/ai";
+import {FaPencil} from "react-icons/fa6";
+import QuestionEditor from "./Question/QuestionEditor.tsx";
 
 export default function QuizEditor() {
     const [activeTab, setActiveTab] = useState("details");
@@ -17,7 +19,7 @@ export default function QuizEditor() {
     const [title, setTitle] = useState(quizExists?.title || "Quiz _");
     const [description, setDescription] = useState(quizExists?.description || "The QUIZ is available online.");
     const [quizType, setQuizType] = useState(quizExists?.quizType || "Graded Quiz");
-    const [points, setPoints] = useState(quizExists?.points || 0);
+    const [points, setPoints] = useState(quizExists?.questions.reduce((acc, q) => acc + q.points, 0) || 0);
     const [assignmentGroup, setAssignmentGroup] = useState(quizExists?.assignmentGroup || "Quizzes");
     const [shuffleAnswers, setShuffleAnswers] = useState(quizExists?.shuffleAnswers || "Yes");
     const [timeLimit, setTimeLimit] = useState(quizExists?.timeLimit || 20);
@@ -34,6 +36,8 @@ export default function QuizEditor() {
     const [published, setPublished] = useState(quizExists?.published || false);
     const [questions, setQuestions] = useState(quizExists?.questions || [])
 
+    const [editingQuestionIndex, setEditingQuestionIndex] = useState<number | null>(null);
+
     return (
         <div className="p-4">
             <div className="d-flex justify-content-end align-items-center gap-3 mb-3">
@@ -48,7 +52,7 @@ export default function QuizEditor() {
                             Not Published <AiOutlineStop className="text-secondary fs-5"/>
                         </>
                     )}
-              </span>
+                </span>
             </div>
             <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k || "details")} className="mb-3">
                 <Tab eventKey="details" title="Details">
@@ -91,7 +95,7 @@ export default function QuizEditor() {
                             <Form.Label column sm={3}>Assignment Group</Form.Label>
                             <Col sm={9}>
                                 <Form.Select value={assignmentGroup}
-                                             onChange={(e) => setAssignmentGroup(e.target.value)}>
+                                            onChange={(e) => setAssignmentGroup(e.target.value)}>
                                     <option>Quizzes</option>
                                     <option>Exams</option>
                                     <option>Assignments</option>
@@ -181,7 +185,7 @@ export default function QuizEditor() {
                                         <Form.Label column sm={6}>Show Correct Answers</Form.Label>
                                         <Col sm={6}>
                                             <Form.Select value={showCorrectAnswers}
-                                                         onChange={(e) => setShowCorrectAnswers(e.target.value)}>
+                                                        onChange={(e) => setShowCorrectAnswers(e.target.value)}>
                                                 <option>After last attempt</option>
                                                 <option>Never</option>
                                                 <option>After each attempt</option>
@@ -298,68 +302,95 @@ export default function QuizEditor() {
                 <Tab eventKey="questions" title="Questions">
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">Questions</h2>
                             <span
-                                className="text-muted-foreground">Total Points: {questions.reduce((acc, q) => acc + q.points, 0)}</span>
+                                className="text-muted-foreground">Total Points: <b>{questions.reduce((acc, q) => acc + q.points, 0)}</b></span>
                         </div>
 
                         {questions.map((q, index) => (
-                            <div
-                                key={index}
-                                className="rounded-xl border p-4 shadow-sm bg-white space-y-2"
-                            >
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-lg font-medium">{q.questionText}</h3>
-                                    <span className="text-muted-foreground text-sm">{q.type} — {q.points} pts</span>
-                                </div>
+                            <div key={index} className="rounded-xl border p-4 shadow-sm bg-white space-y-2">
+                                {editingQuestionIndex === index ? (
+                                    <QuestionEditor
+                                        question={q}
+                                        onCancel={() => setEditingQuestionIndex(null)}
+                                        onSave={(updatedQuestion) => {
+                                            const updated = [...questions];
+                                            updated[index] = updatedQuestion;
+                                            setQuestions(updated);
+                                            setEditingQuestionIndex(null);
+                                        }}
+                                    />
+                                ) : (
+                                    <>
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="text-lg font-medium">{q.questionText}</h3>
+                                            <span className="text-muted-foreground text-sm">
+                                                {q.type}: <b>{q.points}</b> pts
+                                            </span>
+                                        </div>
 
-                                {q.type === "Multiple Choice" && (
-                                    <ul className="list-disc pl-6 space-y-1">
-                                        {q.choices.map((choice, i) => (
-                                            <li key={i} className={i === q.correctAnswerIndex ? "font-semibold" : ""}>
-                                                {choice}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
+                                        {q.type === "Multiple Choice" && (
+                                            <ul className="pl-6 space-y-1">
+                                                {q.choices.map((choice, i) => (
+                                                    <li key={i} className="flex items-center gap-2">
+                                                        {i === q.correctAnswerIndex && (
+                                                            <AiOutlineCheck className="h-4 w-4 text-green-600"/>
+                                                        )}
+                                                        <span>{choice}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
 
-                                {q.type === "True Or False" && (
-                                    <p className="text-muted-foreground">
-                                        Correct Answer: <span
-                                        className="font-medium">{q.correctAnswer ? "True" : "False"}</span>
-                                    </p>
-                                )}
+                                        {q.type === "True Or False" && (
+                                            <p className="text-muted-foreground">
+                                                Correct Answer: <span
+                                                className="font-medium">{q.correctAnswer ? "True" : "False"}</span>
+                                            </p>
+                                        )}
 
-                                {q.type === "Fill In The Blank" && (
-                                    <div>
-                                        <p className="text-muted-foreground">Accepted Answers:</p>
-                                        <ul className="list-disc pl-6">
-                                            {q.possibleAnswers.map((ans, i) => (
-                                                <li key={i}>{ans}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                        {q.type === "Fill In The Blank" && (
+                                            <div>
+                                                <p className="text-muted-foreground">Accepted Answers:</p>
+                                                <ul className="list-disc pl-6">
+                                                    {q.possibleAnswers.map((ans, i) => (
+                                                        <li key={i}>{ans}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-sm text-muted-foreground hover:text-black flex items-center gap-md-3 ml-auto btn-outline rounded-0"
+                                            onClick={() => setEditingQuestionIndex(index)}
+                                        >
+                                            <FaPencil className="w-4 h-4"/>
+                                            Edit
+                                        </Button>
+                                    </>
                                 )}
                             </div>
                         ))}
 
-                        <div className="pt-4">
-                            <Button variant="outline" className="w-full">
+                        <div className="pt-3 pb-4 ">
+                            <Button variant="light" className="w-full rounded-0 btn-outline-dark">
                                 + New Question
                             </Button>
                         </div>
-                        <div>
-                            <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                <Button variant="danger">Save</Button>
-                            </Link>
+                        <Row>
+                            <br/>
+                            <hr></hr>
+                            <div className="pt-2 fs-3">
+                                <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
+                                    <Button variant="danger" className="rounded-0">Save</Button>
+                                </Link>
 
-                            <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                <Button variant="secondary">Cancel</Button>
-
-                            </Link>
-                        </div>
+                                <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
+                                    <Button variant="light" className="rounded-0">Cancel</Button>
+                                </Link>
+                            </div>
+                        </Row>
                     </div>
-
                 </Tab>
             </Tabs>
         </div>

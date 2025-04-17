@@ -157,7 +157,7 @@ export default function Quizzes() {
                     <Modal.Title>{dialogTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete the quiz titled
+                    Alter Quiz
                     "<b>{quizzes.find(q => q._id === selectedQuizId)?.title}</b>"?
                 </Modal.Body>
                 <Modal.Footer>
