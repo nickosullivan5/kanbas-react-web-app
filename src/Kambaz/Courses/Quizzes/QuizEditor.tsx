@@ -296,7 +296,70 @@ export default function QuizEditor() {
                 </Tab>
 
                 <Tab eventKey="questions" title="Questions">
-                    <p>Questions Editor coming soon...</p>
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-xl font-semibold">Questions</h2>
+                            <span
+                                className="text-muted-foreground">Total Points: {questions.reduce((acc, q) => acc + q.points, 0)}</span>
+                        </div>
+
+                        {questions.map((q, index) => (
+                            <div
+                                key={index}
+                                className="rounded-xl border p-4 shadow-sm bg-white space-y-2"
+                            >
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-lg font-medium">{q.questionText}</h3>
+                                    <span className="text-muted-foreground text-sm">{q.type} — {q.points} pts</span>
+                                </div>
+
+                                {q.type === "Multiple Choice" && (
+                                    <ul className="list-disc pl-6 space-y-1">
+                                        {q.choices.map((choice, i) => (
+                                            <li key={i} className={i === q.correctAnswerIndex ? "font-semibold" : ""}>
+                                                {choice}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                {q.type === "True Or False" && (
+                                    <p className="text-muted-foreground">
+                                        Correct Answer: <span
+                                        className="font-medium">{q.correctAnswer ? "True" : "False"}</span>
+                                    </p>
+                                )}
+
+                                {q.type === "Fill In The Blank" && (
+                                    <div>
+                                        <p className="text-muted-foreground">Accepted Answers:</p>
+                                        <ul className="list-disc pl-6">
+                                            {q.possibleAnswers.map((ans, i) => (
+                                                <li key={i}>{ans}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+                        <div className="pt-4">
+                            <Button variant="outline" className="w-full">
+                                + New Question
+                            </Button>
+                        </div>
+                        <div>
+                            <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
+                                <Button variant="danger">Save</Button>
+                            </Link>
+
+                            <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
+                                <Button variant="secondary">Cancel</Button>
+
+                            </Link>
+                        </div>
+                    </div>
+
                 </Tab>
             </Tabs>
         </div>
