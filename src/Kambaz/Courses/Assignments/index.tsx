@@ -18,6 +18,7 @@ import * as coursesClient from "../client";
 // import * as modulesClient from "../Modules/client.ts";
 // import {deleteModule} from "../Modules/reducer.ts";
 import * as assignmentsClient from "./client";
+
 export default function Assignments() {
     const {cid} = useParams();
 
@@ -31,7 +32,7 @@ export default function Assignments() {
     };
     const [show, setShow] = useState(false);
     const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
-   const removeAssignment = async (assignmentId: string) => {
+    const removeAssignment = async (assignmentId: string) => {
         await assignmentsClient.deleteAssignment(assignmentId);
         // dispatch(deleteModule(assignmentId));
 
@@ -131,15 +132,15 @@ export default function Assignments() {
                             <GreenCheckmark/>
                             <IoEllipsisVertical className="fs-4 ms-2"/>
                             <FacultyOnlyRoute>
-                           <FaRegTrashAlt
+                                <FaRegTrashAlt
                                     onClick={() => {
                                         setSelectedAssignmentId(assignment._id); // Store selected ID
                                         setShow(true); // Open modal
                                     }}
-                                    style={{ cursor: "pointer" }}
+                                    style={{cursor: "pointer"}}
                                 />
-</FacultyOnlyRoute>
-                               <AssignmentDeletion
+                            </FacultyOnlyRoute>
+                            <AssignmentDeletion
                                 show={show}
                                 handleClose={() => setShow(false)}
                                 dialogTitle="Confirm Deletion"

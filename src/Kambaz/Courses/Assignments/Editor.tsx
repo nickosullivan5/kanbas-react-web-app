@@ -25,10 +25,10 @@ export default function AssignmentEditor() {
     const [onlineEntryOption, setOnlineEntryOption] = useState(assignmentExists?.online_entry_option || ["Text Entry"]);
     const [releaseDate, setReleaseDate] = useState(assignmentExists?.release_date || "2000-01-01");
     const dispatch = useDispatch();
-      const fetchAssignments = async () => {
+    const fetchAssignments = async () => {
         const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
         dispatch(setAssignments(assignments));
-            console.log("Assignments from server:", assignments);
+        console.log("Assignments from server:", assignments);
 
     };
     const createAssignmentForCourse = async () => {

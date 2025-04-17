@@ -8,8 +8,10 @@ import {FaAlignJustify} from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-// import * as client from "../Account/client.ts";
 import * as coursesClient from "./client.ts"
+import Quizzes from "./Quizzes";
+import QuizDetails from "./Quizzes/QuizDetails.tsx";
+import QuizEditor from "./Quizzes/QuizEditor.tsx";
 
 export default function Courses() {
     const {pathname} = useLocation();
@@ -57,7 +59,10 @@ export default function Courses() {
                         <Route path="People" element={<PeopleTable users={users}/>}/>
                         <Route path="Piazza" element={<h2>Piazza</h2>}/>
                         <Route path="Zoom" element={<h2>Zoom</h2>}/>
-                        <Route path="Quizzes" element={<h2>Quizzes</h2>}/>
+                        <Route path="Quizzes" element={<Quizzes/>}/>
+                        <Route path="Quizzes/:qid" element={<QuizDetails/>}/>
+                        <Route path="Quizzes/:qid/Editor" element={<QuizEditor/>}/>
+                        {/*<Route path="Quizzes/:qid/Preview" element={<QuizPreview/>}/>*/}
                         <Route path="Grades" element={<h2>Grades</h2>}/>
 
                     </Routes>
