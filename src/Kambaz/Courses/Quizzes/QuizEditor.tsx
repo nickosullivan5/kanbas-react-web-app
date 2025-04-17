@@ -1,42 +1,118 @@
 import {Link, useParams} from "react-router";
-import {useState} from "react";
-import dummyquizzes from "./dummy.json";
+import {useEffect, useState} from "react";
 import {Button, Col, Form, Row, Tab, Tabs} from "react-bootstrap";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import {AiOutlineCheck, AiOutlineStop} from "react-icons/ai";
 import {FaPencil} from "react-icons/fa6";
 import QuestionEditor from "./Question/QuestionEditor.tsx";
+import * as coursesClient from "../client";
+import * as quizzesClient from "./client";
 
 export default function QuizEditor() {
+       const { cid, qid } = useParams();
     const [activeTab, setActiveTab] = useState("details");
-    const {cid, qid} = useParams();
+    const [quizzes, setQuizzes] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [points, setPoints] = useState(0);
+    const [courseID] = useState(cid); // Ensure this is unconditionally used
 
-    const [quizzes] = useState(dummyquizzes);
-    const quizExists = quizzes.find((a: { _id: string | undefined }) => a._id === qid);
-
-    const [courseID] = useState(cid);
-    const [title, setTitle] = useState(quizExists?.title || "Quiz _");
-    const [description, setDescription] = useState(quizExists?.description || "The QUIZ is available online.");
-    const [quizType, setQuizType] = useState(quizExists?.quizType || "Graded Quiz");
-    const [points, setPoints] = useState(quizExists?.questions.reduce((acc, q) => acc + q.points, 0) || 0);
-    const [assignmentGroup, setAssignmentGroup] = useState(quizExists?.assignmentGroup || "Quizzes");
-    const [shuffleAnswers, setShuffleAnswers] = useState(quizExists?.shuffleAnswers || "Yes");
-    const [timeLimit, setTimeLimit] = useState(quizExists?.timeLimit || 20);
-    const [multipleAttempts, setMultipleAttempts] = useState(quizExists?.multipleAttempts || false);
-    const [howManyAttempts, setHowManyAttempts] = useState(quizExists?.howManyAttempts || 0);
-    const [showCorrectAnswers, setShowCorrectAnswers] = useState(quizExists?.showCorrectAnswers || "Immediately after each attempt");
-    const [accessCode, setAccessCode] = useState(quizExists?.accessCode || "");
-    const [oneQuestionAtATime, setOneQuestionAtATime] = useState(quizExists?.oneQuestionAtATime || true);
-    const [webcamRequired, setWebcamRequired] = useState(quizExists?.webcamRequired || false);
-    const [lockQuestionsAfterAnswering, setLockQuestionsAfterAnswering] = useState(quizExists?.lockQuestionsAfterAnswering || false);
-    const [dueDate, setDueDate] = useState(quizExists?.dueDate || "2025-01-01");
-    const [availableDate, setAvailableDate] = useState(quizExists?.availableDate || "2025-01-01");
-    const [untilDate, setUntilDate] = useState(quizExists?.untilDate || "2025-01-01");
-    const [published, setPublished] = useState(quizExists?.published || false);
-    const [questions, setQuestions] = useState(quizExists?.questions || [])
-
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [quizType, setQuizType] = useState("Graded Quiz");
+    const [assignmentGroup, setAssignmentGroup] = useState("Quizzes");
+    const [shuffleAnswers, setShuffleAnswers] = useState(true);
+    const [timeLimit, setTimeLimit] = useState(20);
+    const [multipleAttempts, setMultipleAttempts] = useState(false);
+    const [howManyAttempts, setHowManyAttempts] = useState(0);
+    const [showCorrectAnswers, setShowCorrectAnswers] = useState("Immediately after each attempt");
+    const [accessCode, setAccessCode] = useState("");
+    const [oneQuestionAtATime, setOneQuestionAtATime] = useState(true);
+    const [webcamRequired, setWebcamRequired] = useState(false);
+    const [lockQuestionsAfterAnswering, setLockQuestionsAfterAnswering] = useState(false);
+    const [dueDate, setDueDate] = useState("2025-01-01");
+    const [availableDate, setAvailableDate] = useState("2025-01-01");
+    const [untilDate, setUntilDate] = useState("2025-01-01");
+    const [published, setPublished] = useState(false);
+    const [questions, setQuestions] = useState([]);
     const [editingQuestionIndex, setEditingQuestionIndex] = useState<number | null>(null);
+
+    const fetchQuizzes = async () => {
+        const getQuizzes = await coursesClient.findQuizzesForCourse(cid as string);
+        setQuizzes(getQuizzes);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchQuizzes();
+    }, []);
+
+    const quizExists = quizzes.find((a: { _id: string }) => a._id === qid);
+
+    useEffect(() => {
+        if (quizExists) {
+            setTitle(quizExists.title);
+            setDescription(quizExists.description);
+            setQuizType(quizExists.quizType);
+            setAssignmentGroup(quizExists.assignmentGroup);
+            setShuffleAnswers(quizExists.shuffleAnswers);
+            setTimeLimit(quizExists.timeLimit);
+            setMultipleAttempts(quizExists.multipleAttempts);
+            setHowManyAttempts(quizExists.howManyAttempts);
+            setShowCorrectAnswers(quizExists.showCorrectAnswers);
+            setAccessCode(quizExists.accessCode);
+            setOneQuestionAtATime(quizExists.oneQuestionAtATime);
+            setWebcamRequired(quizExists.webcamRequired);
+            setLockQuestionsAfterAnswering(quizExists.lockQuestionsAfterAnswering);
+            setDueDate(quizExists.dueDate);
+            setAvailableDate(quizExists.availableDate);
+            setUntilDate(quizExists.untilDate);
+            setPublished(quizExists.published);
+            setQuestions(quizExists.questions);
+        }
+    }, [quizExists]);
+
+    const calculateTotalPoints = () => {
+        setPoints(questions.reduce((acc: Number, q: any) => acc + q.points, 0));
+    };
+
+const updateQuizForCourse = async (publish: boolean = published) => {
+        const updatedQuiz = {
+            ...quizExists,
+            title: title,
+            description: description,
+            quizType: quizType,
+            points: points,
+            assignmentGroup: assignmentGroup,
+            shuffleAnswers: shuffleAnswers,
+            timeLimit: timeLimit,
+            multipleAttempts: multipleAttempts,
+            howManyAttempts: howManyAttempts,
+            showCorrectAnswers: showCorrectAnswers,
+            accessCode: accessCode,
+            oneQuestionAtATime: oneQuestionAtATime,
+            webcamRequired: webcamRequired,
+            lockQuestionsAfterAnswering: lockQuestionsAfterAnswering,
+            dueDate: dueDate,
+            availableDate: availableDate,
+            untilDate: untilDate,
+            published: publish,
+            questions: questions
+        };
+        await quizzesClient.updateQuiz(updatedQuiz);
+        console.log("updated QUiz: ", updatedQuiz)
+        fetchQuizzes();
+        calculateTotalPoints();
+    };
+
+    if (loading) {
+        return <div className="text-center mt-5">Loading quiz...</div>;
+    }
+
+    if (!quizExists) {
+        return <div className="text-center mt-5 text-danger">Quiz not found.</div>;
+    }
+
 
     return (
         <div className="p-4">
@@ -95,7 +171,7 @@ export default function QuizEditor() {
                             <Form.Label column sm={3}>Assignment Group</Form.Label>
                             <Col sm={9}>
                                 <Form.Select value={assignmentGroup}
-                                            onChange={(e) => setAssignmentGroup(e.target.value)}>
+                                             onChange={(e) => setAssignmentGroup(e.target.value)}>
                                     <option>Quizzes</option>
                                     <option>Exams</option>
                                     <option>Assignments</option>
@@ -115,8 +191,7 @@ export default function QuizEditor() {
                                         <Col sm={6}>
                                             <Form.Check
                                                 type="checkbox"
-                                                checked={shuffleAnswers === "Yes"}
-                                                onChange={(e) => setShuffleAnswers(e.target.checked ? "Yes" : "No")}
+                                                onChange={(e) => setShuffleAnswers(e.target.checked)}
                                             />
                                         </Col>
                                     </Form.Group>
@@ -185,7 +260,7 @@ export default function QuizEditor() {
                                         <Form.Label column sm={6}>Show Correct Answers</Form.Label>
                                         <Col sm={6}>
                                             <Form.Select value={showCorrectAnswers}
-                                                        onChange={(e) => setShowCorrectAnswers(e.target.value)}>
+                                                         onChange={(e) => setShowCorrectAnswers(e.target.value)}>
                                                 <option>After last attempt</option>
                                                 <option>Never</option>
                                                 <option>After each attempt</option>
@@ -284,18 +359,21 @@ export default function QuizEditor() {
 
                         <div className="d-flex gap-2">
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                <Button variant="primary">Save</Button>
+                                <Button variant="primary" onClick={() => updateQuizForCourse()}>Save</Button>
                             </Link>
 
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
-                                <Button variant="danger" onChange={(e) => setPublished(true)}>Save & Publish</Button>
+                                <Button variant="danger" onClick={(e) => {
+                                        updateQuizForCourse(true); // pass true to indicate publish
+
+                                }}>Save & Publish</Button>
                             </Link>
 
                             <Link to={`/Kambaz/Courses/${cid}/Quizzes`}>
                                 <Button variant="secondary">Cancel</Button>
-
                             </Link>
                         </div>
+
                     </Form>
                 </Tab>
 

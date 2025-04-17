@@ -99,6 +99,7 @@ export default function Quizzes() {
 
     const getAvailabilityStatus = (quiz: any) => {
         const now = new Date();
+        // console.log("now: " , now)
         const available = new Date(quiz.availableDate);
         const until = new Date(quiz.untilDate);
 
