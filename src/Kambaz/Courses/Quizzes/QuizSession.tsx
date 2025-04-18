@@ -301,7 +301,7 @@ const fetchPreviousAnswer = async () => {
                                 {currentQuestion.type === "true_false" && (
                                     <Form>
                                         <ListGroup variant="flush" style={{borderRadius: "0"}}>
-                                            {["True", "False"].map((val, idx) => (
+                                            {[true, false].map((val, idx) => (
                                                 <ListGroup.Item
                                                     key={idx}
                                                     style={{
@@ -313,10 +313,10 @@ const fetchPreviousAnswer = async () => {
                                                         type="radio"
                                                         id={`tf-${currentIndex}-${idx}`}
                                                         name={`question-${currentIndex}`}
-                                                        label={val}
-                                                        checked={currentAnswers[currentIndex] === (val === "True")}
+                                                        label={val ? "True" : "False"}
+                                                        checked={currentAnswers[currentIndex] === val}
                                                         onChange={() =>
-                                                            handleSelectAnswer(currentIndex, val === "True")
+                                                            handleSelectAnswer(currentIndex, val)
                                                         }
                                                         style={{color: "#333"}}
                                                     />
