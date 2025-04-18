@@ -58,19 +58,40 @@ export default function QuizResult() {
             setLoading(false);
         }
     };
+        // useEffect(() => {
+        //     if (!currentUser || !currentUser._id) return;
+        //
+        //     fetchQuizzes();
+        //     fetchPreviousAnswer();
+        // }, [currentUser]);
 
-    useEffect(() => {
-        fetchQuizzes();
-        fetchPreviousAnswer();
-    }, [currentUser]);
+const [quiz, setQuiz] = useState<any>(null);
+useEffect(() => {
+    const init = async () => {
+        if (!currentUser || !currentUser._id) return;
 
-    const quiz = quizzes.find((q: any) => q._id === qid);
+        try {
+            const [getQuizzes, getAnswer] = await Promise.all([
+                coursesClient.findQuizzesForCourse(cid as string),
+                userClient.findAnswerForUser(currentUser._id, qid as string, cid as string)
+            ]);
 
-    useEffect(() => {
-        if (quiz) {
-            setQuestions(quiz.questions || []);
+            setQuizzes(getQuizzes);
+            const foundQuiz = getQuizzes.find((q: any) => q._id === qid);
+            setQuiz(foundQuiz || null);
+            setQuestions(foundQuiz?.questions || []);
+            setAnswer(getAnswer);
+        } catch (err) {
+            setError("Failed to load quiz. Please try again.");
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-    }, [quiz]);
+    };
+
+    init();
+}, [currentUser, cid, qid]);
+
 
     if (loading) {
         return (
@@ -100,7 +121,8 @@ export default function QuizResult() {
     }
 
     const currentQuestion = questions[currentIndex];
-
+    console.log("questions: ", questions)
+    console.log("answer: ", answer)
     const progress = ((currentIndex + 1) / questions.length) * 100;
 
     return (
@@ -110,12 +132,13 @@ export default function QuizResult() {
                     as="h3"
                     style={{
                         backgroundColor: "#ffffff",
-                        color: "#4c4c4c",
+                        color: "#434343",
                         borderBottom: "1px solid #ddd",
                         borderRadius: "0"
                     }}
                 >
-                    {quiz.title}
+                    Results for: <b>{quiz.title}</b>
+                    <h5>Score: <b className={"text-dark"}>{answer.grade * 100}%</b> </h5>
 
                 </Card.Header>
                 <FacultyOnlyRoute>
@@ -166,8 +189,12 @@ export default function QuizResult() {
                                         <ListGroup variant="flush" style={{ borderRadius: "0" }}>
                                             {currentQuestion.choices.map((choice: string, idx: number) => {
                                                 const isCorrect = idx === currentQuestion.correctAnswerIndex;
-                                                const isUserChoice = answer.answers[currentIndex] === idx;
+                                                console.log("idx: ", idx)
+                                                console.log("user answer:  ", answer.answers[0][currentIndex])
+                                                const isUserChoice = answer.answers[0][currentIndex] === idx;
+                                                console.log("is user choice: ", isUserChoice)
                                                 const isWrongUserChoice = isUserChoice && !isCorrect;
+                                                console.log('is wrong user choice: ', isWrongUserChoice)
 
                                                 return (
                                                 <ListGroup.Item
@@ -210,15 +237,21 @@ export default function QuizResult() {
                                         <ListGroup variant="flush" style={{borderRadius: "0"}}>
                                             {[true, false].map((val, idx) => {
                                                 const isCorrect = val === currentQuestion.correctAnswer;
-                                                const isUserChoice = answer.answers[currentIndex] === idx;
+                                                console.log('is correct', isCorrect)
+                                                console.log("user answer:  ", answer.answers[0][currentIndex])
+                                                const isUserChoice = answer.answers[0][currentIndex] === val;
                                                 const isWrongUserChoice = isUserChoice && !isCorrect;
+                                                console.log("iswrong user choice: ", isWrongUserChoice)
 
                                                 return (
                                                     <ListGroup.Item
                                                         key={idx}
                                                         style={{
                                                             padding: "0.75rem 1.25rem",
-                                                            borderColor: "#ddd"
+                                                            borderColor: "#ddd",
+                                                            display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between"
                                                         }}
                                                     >
                                                         <Form.Check
@@ -254,11 +287,11 @@ export default function QuizResult() {
                                         >
                                         <Form.Control
                                             type="text"
-                                            value={answer.answers[currentIndex]}
+                                            value={answer.answers[0][currentIndex]}
                                             disabled
-                                            placeholder="Type your answer here..."
+                                             placeholder={answer.answers[0][currentIndex]}
                                             style={{
-                                            borderRadius: "0",
+                                                borderRadius: "0",
                                             borderColor: "#ddd",
                                             color: "#333",
                                             flexGrow: 1
@@ -266,15 +299,15 @@ export default function QuizResult() {
                                         />
 
                                         {/* Show icon */}
-                                        {answer.answers[currentIndex] &&
+                                        {answer.answers[0][currentIndex] &&
                                             currentQuestion.possibleAnswers.some(
                                             (ans: any) =>
                                                 ans.trim().toLowerCase() ===
-                                                answer.answers[currentIndex].trim().toLowerCase()
+                                                answer.answers[0][currentIndex].trim().toLowerCase()
                                             ) ? (
                                             <FaCheck style={{ color: "green" }} />
                                         ) : (
-                                            answer.answers[currentIndex] && (
+                                            answer.answers[0][currentIndex] && (
                                             <FiXCircle style={{ color: "red" }} />
                                             )
                                         )}

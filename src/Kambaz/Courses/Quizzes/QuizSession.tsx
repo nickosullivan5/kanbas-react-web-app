@@ -34,6 +34,7 @@ export default function QuizSession() {
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
     const [attemptNumber, setAttemptNumber] = useState(0)
+    const [answerId, setAnswerId] = useState(0);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
 
     const fetchQuizzes = async () => {
@@ -47,26 +48,28 @@ export default function QuizSession() {
             setLoading(false);
         }
     };
-const fetchPreviousAnswer = async () => {
-    try {
-        const getAnswer = await userClient.findAnswerForUser(
-            currentUser._id as string,
-            qid as string,
-            cid as string
-        );
+    const fetchPreviousAnswer = async () => {
+        try {
+            const getAnswer = await userClient.findAnswerForUser(
+                currentUser._id as string,
+                qid as string,
+                cid as string
+            );
 
-        if (getAnswer && typeof getAnswer.attemptNum === 'number') {
-            setAttemptNumber(getAnswer.attemptNum + 1);
-        } else {
-            setAttemptNumber(1);
+            if (getAnswer && typeof getAnswer.attemptNum === 'number') {
+                setAttemptNumber(getAnswer.attemptNum + 1);
+                setAnswerId(getAnswer._id)
+            } else {
+                setAttemptNumber(1);
+                setAttemptNumber(uuidv4())
+            }
+        } catch (error) {
+            console.error("Error fetching previous answer:", error);
+            setAttemptNumber(1); // fallback in case of an actual error (e.g. network/server error)
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error("Error fetching previous answer:", error);
-        setAttemptNumber(1); // fallback in case of an actual error (e.g. network/server error)
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     useEffect(() => {
         fetchQuizzes();
@@ -103,9 +106,17 @@ const fetchPreviousAnswer = async () => {
                     break;
 
                 case "fill_in_blank": {
-                    const correctText = (question.correctAnswer || "").trim().toLowerCase();
+                    const possibleAnswers = Array.isArray(question.possibleAnswers)
+                        ? question.possibleAnswers
+                        : [question.possibleAnswers];
+
                     const userText = (userAnswer || "").trim().toLowerCase();
-                    if (userText === correctText) {
+
+                    const isCorrect = possibleAnswers.some(answer  =>
+                        (answer || "").trim().toLowerCase() === userText
+                    );
+
+                    if (isCorrect) {
                         correctCount++;
                     }
                     break;
@@ -115,6 +126,7 @@ const fetchPreviousAnswer = async () => {
                     break;
             }
         });
+        console.log("correct count", correctCount);
         return correctCount / questions.length;
     };
     const handleSubmit = async () => {
@@ -125,7 +137,7 @@ const fetchPreviousAnswer = async () => {
 
         const score = calculateScore(currentAnswers, questions);
         const answer = {
-            _id: uuidv4(),
+            _id: answerId,
             quiz: qid,
             user: currentUser._id,
             course: cid,
@@ -141,17 +153,17 @@ const fetchPreviousAnswer = async () => {
         //createAnswer(answer: any, courseId: string, quizId: string) if attemptNum = 1
         //updateAnswer if attemptNum > 1
         if (attemptNumber === 1) {
-                const newAnswer = await userClient.createAnswer(answer, cid as string, qid as string);
-                  console.log("updateanswer from server: ", newAnswer)
+            const newAnswer = await userClient.createAnswer(answer, cid as string, qid as string);
+            console.log("updateanswer from server: ", newAnswer)
 
-                navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${newAnswer._id}`)
+            navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${newAnswer._id}`)
 
-            } else if (attemptNumber > 1) {
-                 await answersClient.updateAnswer(answer);
-                 const updatedAnswer =  await userClient.findAnswerForUser(currentUser._id, qid as string, cid as string)
-                navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${updatedAnswer._id}`)
+        } else if (attemptNumber > 1) {
+            await answersClient.updateAnswer(answer);
+            const updatedAnswer = await userClient.findAnswerForUser(currentUser._id, qid as string, cid as string)
+            navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${updatedAnswer._id}`)
 
-            }
+        }
         try {
             setLoading(true);
 
@@ -192,23 +204,6 @@ const fetchPreviousAnswer = async () => {
         );
     }
 
-    if (submitted) {
-        return (
-            <Container className="my-5 text-center" style={{color: "#555"}}>
-                <Alert variant="secondary">
-                    <h4>Quiz Submitted Successfully!</h4>
-                    <p>Your answers have been recorded.</p>
-                </Alert>
-                <Button
-                    variant="secondary"
-                    onClick={() => setSubmitted(false)}
-                    style={{borderRadius: "0"}}
-                >
-                    Review Answers
-                </Button>
-            </Container>
-        );
-    }
 
     const currentQuestion = questions[currentIndex];
     const progress = ((currentIndex + 1) / questions.length) * 100;
