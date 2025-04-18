@@ -112,7 +112,7 @@ export default function QuizSession() {
 
                     const userText = (userAnswer || "").trim().toLowerCase();
 
-                    const isCorrect = possibleAnswers.some(answer  =>
+                    const isCorrect = possibleAnswers.some((answer: any) =>
                         (answer || "").trim().toLowerCase() === userText
                     );
 
@@ -168,6 +168,7 @@ export default function QuizSession() {
             setLoading(true);
 
             setSubmitted(true);
+            console.log("Submitted:", submitted);
 
         } catch (err) {
             setError("Failed to submit answers. Please try again.");
@@ -221,6 +222,8 @@ export default function QuizSession() {
                     }}
                 >
                     {quiz.title}
+                    {currentUser.role === "STUDENT" &&
+                        (<h5>Attempt: <b className={"text-dark"}>{attemptNumber}</b> </h5>)}
 
                 </Card.Header>
                 <FacultyOnlyRoute>

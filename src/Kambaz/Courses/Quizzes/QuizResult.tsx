@@ -32,20 +32,9 @@ export default function QuizResult() {
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const [answer, setAnswer] = useState<any>();
 
-    const fetchQuizzes = async () => {
-        try {
-            const getQuizzes = await coursesClient.findQuizzesForCourse(cid as string);
-            setQuizzes(getQuizzes);
-        } catch (err) {
-            setError("Failed to load quiz. Please try again.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-const [quiz, setQuiz] = useState<any>(null);
-useEffect(() => {
+    console.log(quizzes);
+    const [quiz, setQuiz] = useState<any>(null);
+    useEffect(() => {
     const init = async () => {
         if (!currentUser || !currentUser._id) return;
 
@@ -118,6 +107,8 @@ useEffect(() => {
                 >
                     Results for: <b>{quiz.title}</b>
                     <h5>Score: <b className={"text-dark"}>{answer.grade * 100}%</b> </h5>
+                    {currentUser.role === "STUDENT" &&
+                    (<h5>Attempt: <b className={"text-dark"}>{answer.attemptNum}</b> </h5>)}
 
                 </Card.Header>
                 <FacultyOnlyRoute>
