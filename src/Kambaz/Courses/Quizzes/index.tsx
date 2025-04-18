@@ -39,8 +39,6 @@ export default function Quizzes() {
     const [quizzes, setQuizzes] = useState<any[]>([]);
 
 
-
-
     const fetchQuizzes = async () => {
         const getQuizzes = await coursesClient.findQuizzesForCourse(cid as string);
         setQuizzes(getQuizzes);

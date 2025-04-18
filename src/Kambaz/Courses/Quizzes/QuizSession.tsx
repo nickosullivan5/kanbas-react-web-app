@@ -20,8 +20,13 @@ import {v4 as uuidv4} from "uuid";
 import {AiOutlineExclamationCircle} from "react-icons/ai";
 import {useSelector} from "react-redux";
 import * as answersClient from "./Answers/client.ts"
+import {useNavigate} from "react-router-dom";
+import {users} from "../../Database";
+import {findAnswerForUser} from "../../Account/client.ts";
 
 export default function QuizSession() {
+    const navigate = useNavigate()
+
     const {cid, qid} = useParams();
     const [quizzes, setQuizzes] = useState<any[]>([]);
     const [questions, setQuestions] = useState([]);
@@ -116,9 +121,9 @@ const fetchPreviousAnswer = async () => {
     };
     const handleSubmit = async () => {
         console.log("User:", currentUser?._id);
-console.log("Quiz ID:", qid);
-console.log("Course ID:", cid);
-console.log("Attempt Number:", attemptNumber);
+        console.log("Quiz ID:", qid);
+        console.log("Course ID:", cid);
+        console.log("Attempt Number:", attemptNumber);
 
         const score = calculateScore(currentAnswers, questions);
         const answer = {
@@ -137,15 +142,22 @@ console.log("Attempt Number:", attemptNumber);
         //createAnswer(answer: any, courseId: string, quizId: string) if attemptNum = 1
         //updateAnswer if attemptNum > 1
         if (attemptNumber === 1) {
-                await userClient.createAnswer(answer, cid as string, qid as string);
+                const newAnswer = await userClient.createAnswer(answer, cid as string, qid as string);
+                  console.log("updateanswer from server: ", newAnswer)
+
+                navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${newAnswer._id}`)
+
             } else if (attemptNumber > 1) {
-                await answersClient.updateAnswer(answer);
+                 await answersClient.updateAnswer(answer);
+                 const updatedAnswer =  await userClient.findAnswerForUser(currentUser._id, qid as string, cid as string)
+                navigate(`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${updatedAnswer._id}`)
+
             }
         try {
             setLoading(true);
 
             setSubmitted(true);
-            // alert("Answers submitted successfully!");
+
         } catch (err) {
             setError("Failed to submit answers. Please try again.");
             console.error(err);
