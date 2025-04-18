@@ -84,6 +84,7 @@ export const findAnswerForUser = async (userId: string, quizId: string, courseId
   return response.data;
 };
 export const createAnswer = async (answer: any, courseId: string, quizId: string) => {
+  console.log("sending to server this answer:", answer)
   const response = await axiosWithCredentials.post(`${USERS_API}/current/courses/${courseId}/quizzes/${quizId}`, answer);
   return response.data;
 };

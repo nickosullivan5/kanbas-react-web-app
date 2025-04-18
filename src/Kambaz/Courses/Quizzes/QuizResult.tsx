@@ -100,12 +100,12 @@ export default function QuizSession() {
   if (submitted) {
     return (
       <Container className="my-5 text-center" style={{ color: "#555" }}>
-        <Alert variant="secondary">
-          <h4>Quiz Submitted Successfully!</h4>
+        <Alert variant="light">
+          <h4><b>Quiz Submitted Successfully!</b></h4>
           <p>Your answers have been recorded.</p>
         </Alert>
         <Button
-          variant="secondary"
+          variant="light"
           onClick={() => setSubmitted(false)}
           style={{ borderRadius: "0" }}
         >

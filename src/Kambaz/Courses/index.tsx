@@ -13,6 +13,7 @@ import Quizzes from "./Quizzes";
 import QuizDetails from "./Quizzes/QuizDetails.tsx";
 import QuizEditor from "./Quizzes/QuizEditor.tsx";
 import QuizSession from "./Quizzes/QuizSession.tsx";
+    import QuizResult from "./Quizzes/QuizResult.tsx";
 
 export default function Courses() {
     const {pathname} = useLocation();
@@ -57,6 +58,7 @@ export default function Courses() {
                         <Route path="Quizzes/:qid" element={<QuizDetails/>}/>
                         <Route path="Quizzes/:qid/Editor" element={<QuizEditor/>}/>
                         <Route path="Quizzes/:qid/Session" element={<QuizSession/>}/>
+                        <Route path="Quizzes/:qid/Result" element={<QuizResult/>}/>
                         <Route path="Grades" element={<h2>Grades</h2>}/>
 
                     </Routes>
