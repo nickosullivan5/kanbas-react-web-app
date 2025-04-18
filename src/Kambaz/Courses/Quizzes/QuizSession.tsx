@@ -34,7 +34,7 @@ export default function QuizSession() {
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
     const [attemptNumber, setAttemptNumber] = useState(0)
-    const [answerId, setAnswerId] = useState(0);
+    const [answerId, setAnswerId] = useState("");
     const {currentUser} = useSelector((state: any) => state.accountReducer);
 
     const fetchQuizzes = async () => {
@@ -61,7 +61,7 @@ export default function QuizSession() {
                 setAnswerId(getAnswer._id)
             } else {
                 setAttemptNumber(1);
-                setAttemptNumber(uuidv4())
+                setAnswerId(uuidv4())
             }
         } catch (error) {
             console.error("Error fetching previous answer:", error);

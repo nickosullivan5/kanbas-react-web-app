@@ -25,7 +25,7 @@ export default function QuizEditor() {
     const [shuffleAnswers, setShuffleAnswers] = useState(true);
     const [timeLimit, setTimeLimit] = useState(20);
     const [multipleAttempts, setMultipleAttempts] = useState(false);
-    const [howManyAttempts, setHowManyAttempts] = useState(0);
+    const [howManyAttempts, setHowManyAttempts] = useState(1);
     const [showCorrectAnswers, setShowCorrectAnswers] = useState("Immediately after each attempt");
     const [accessCode, setAccessCode] = useState("");
     const [oneQuestionAtATime, setOneQuestionAtATime] = useState(true);

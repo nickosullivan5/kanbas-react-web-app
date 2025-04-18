@@ -43,27 +43,6 @@ export default function QuizResult() {
             setLoading(false);
         }
     };
-    const fetchPreviousAnswer = async () => {
-        try {
-            const getAnswer = await userClient.findAnswerForUser(
-                currentUser._id as string,
-                qid as string,
-                cid as string
-            );
-
-            setAnswer(getAnswer);
-        } catch (error) {
-            console.error("Error fetching previous answer:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-        // useEffect(() => {
-        //     if (!currentUser || !currentUser._id) return;
-        //
-        //     fetchQuizzes();
-        //     fetchPreviousAnswer();
-        // }, [currentUser]);
 
 const [quiz, setQuiz] = useState<any>(null);
 useEffect(() => {

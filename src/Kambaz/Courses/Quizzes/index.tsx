@@ -25,7 +25,9 @@ export default function Quizzes() {
     const [show, setShow] = useState(false);
     const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
     const [quizzes, setQuizzes] = useState<any[]>([]);
-    const [answerMap, setAnswerMap] = useState<{ [quizId: string]: string }>({});
+    const [answerIdMap, setAnswerIdMap] = useState<{ [quizId: string]: string }>({});
+    const [answerAttemptsLeftMap, setAnswerAttemptsLeftMap] = useState<{ [quizId: string]: number }>({});
+
 
     const handleClose = () => {
         setShow(false);
@@ -45,18 +47,21 @@ export default function Quizzes() {
     };
 
     const fetchAnswers = async () => {
-        const map: { [quizId: string]: string } = {};
+        const answerIdMap: { [quizId: string]: string } = {};
+        const AttemptsLeftMap: { [quizId: string]: number } = {};
         for (const quiz of quizzes) {
             try {
                 const answer = await userClient.findAnswerForUser(currentUser._id, quiz._id, cid as string);
                 if (answer?._id) {
-                    map[quiz._id] = answer._id;
+                    answerIdMap[quiz._id] = answer._id;
+                    AttemptsLeftMap[quiz._id] = quiz.howManyAttempts - answer.attemptNum
                 }
             } catch (e) {
                 // no previous attempt
             }
         }
-        setAnswerMap(map);
+        setAnswerIdMap(answerIdMap);
+        setAnswerAttemptsLeftMap(AttemptsLeftMap)
     };
 
     const createQuizForCourse = async () => {
@@ -98,7 +103,7 @@ export default function Quizzes() {
 
     const publishQuiz = async () => {
         const selectedQuiz = quizzes.find(q => q._id === selectedQuizId);
-        const updatedQuiz = { ...selectedQuiz, published: !selectedQuiz.published };
+        const updatedQuiz = {...selectedQuiz, published: !selectedQuiz.published};
         await quizzesClient.updateQuiz(updatedQuiz);
         fetchQuizzes();
     };
@@ -134,7 +139,7 @@ export default function Quizzes() {
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div id="search-bar" className="rounded-1 border-gray border w-20 d-flex align-items-center">
                     <CiSearch className="text-muted fs-4 ps-1 pb-1 pe-1"/>
-                    <input placeholder="Search..." className="border-0 flex-grow-1" style={{outline: 'none'}} />
+                    <input placeholder="Search..." className="border-0 flex-grow-1" style={{outline: 'none'}}/>
                 </div>
                 <FacultyOnlyRoute>
                     <div className="d-flex">
@@ -152,7 +157,8 @@ export default function Quizzes() {
                         <FaCaretDown className="me-2 fs-5"/>
                         <b> QUIZZES</b>
                         <div className="float-end">
-                            <div className="border border-gray rounded-pill border-1 d-inline-flex align-items-center p-2">
+                            <div
+                                className="border border-gray rounded-pill border-1 d-inline-flex align-items-center p-2">
                                 40% of Total
                             </div>
                             <BsPlus/>
@@ -162,7 +168,8 @@ export default function Quizzes() {
                 </ListGroup.Item>
                 {(currentUser.role === "FACULTY" ? quizzes : quizzes.filter((quiz: any) => quiz.published))
                     .map((quiz: any) => (
-                        <ListGroup.Item key={quiz._id || quiz.title} className="wd-assignment-list-item p-3 ps-2 fs-6 d-flex align-items-center border-start border-gray gap-2">
+                        <ListGroup.Item key={quiz._id || quiz.title}
+                                        className="wd-assignment-list-item p-3 ps-2 fs-6 d-flex align-items-center border-start border-gray gap-2">
                             <BsGripVertical className="fs-5"/>
                             <FacultyOnlyRoute>
                                 <Link to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id || "placeholder-id"}`}>
@@ -170,21 +177,44 @@ export default function Quizzes() {
                                 </Link>
                             </FacultyOnlyRoute>
                             <div className="flex-grow-1">
-                                <Link to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/Session`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <div><b>{quiz.title}</b></div>
-                                </Link>
+                                {(answerAttemptsLeftMap[quiz._id] <= 0 && currentUser.role === 'STUDENT') ? (
+                                    <div style={{textDecoration: 'none'}} className="text-danger">
+                                        <div><b>{quiz.title}</b> No attempts remaining!</div>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/Session`}
+                                        style={{textDecoration: 'none', color: 'inherit'}}
+                                    >
+                                        <div><b>{quiz.title}</b></div>
+                                    </Link>
+                                )}
+
                                 <small className="text-muted d-block mb-1">{getAvailabilityStatus(quiz)}</small>
                                 <small className="text-muted">
-                                    <b>Due:</b> {new Date(quiz.dueDate).toLocaleString("en-US", { month: "long", day: "numeric", hour: "numeric", minute: "2-digit", hour12: true })} |
+                                    <b>Due:</b> {new Date(quiz.dueDate).toLocaleString("en-US", {
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                    hour12: true
+                                })} |
                                     <b> Points:</b> {quiz.points} |
                                     <b> Questions:</b> {quiz.questions?.length || "N/A"} |
                                     <StudentOnlyRoute>
-                                    {answerMap[quiz._id] && (
-                                        <Link to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${answerMap[quiz._id]}`}>
-                                            <i className="text-danger">View previous attempt</i>
-                                        </Link>
-                                    )}
+                                        {answerIdMap[quiz._id] && (
+                                            <Link
+                                                to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/${answerIdMap[quiz._id]}`}>
+                                                <i className="text-danger">View previous attempt </i>|
+                                            </Link>
+                                        )}
+                                        {answerIdMap[quiz._id] && (
+                                            <text>
+                                                <i>Attempts Remaining: <b>{answerAttemptsLeftMap[quiz._id]}</b> </i>
+                                            </text>
+                                        )}
                                     </StudentOnlyRoute>
+
                                     <StudentOnlyRoute>
                                         {quiz.score !== undefined && (
                                             <> | <b>Score:</b> {quiz.score}</>
@@ -200,7 +230,8 @@ export default function Quizzes() {
                                 )}
                             </FacultyOnlyRoute>
                             <FacultyOnlyRoute>
-                                <IoEllipsisVertical className="fs-4 ms-2" style={{cursor: "pointer"}} onClick={() => handleShow(quiz._id || "placeholder-id")} />
+                                <IoEllipsisVertical className="fs-4 ms-2" style={{cursor: "pointer"}}
+                                                    onClick={() => handleShow(quiz._id || "placeholder-id")}/>
                             </FacultyOnlyRoute>
                         </ListGroup.Item>
                     ))}
@@ -215,8 +246,14 @@ export default function Quizzes() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                    <Button variant="warning" onClick={() => {publishQuiz(); handleClose();}}>Publish/Unpublish</Button>
-                    <Button variant="danger" onClick={() => { removeQuiz(); handleClose(); }}>
+                    <Button variant="warning" onClick={() => {
+                        publishQuiz();
+                        handleClose();
+                    }}>Publish/Unpublish</Button>
+                    <Button variant="danger" onClick={() => {
+                        removeQuiz();
+                        handleClose();
+                    }}>
                         Delete
                     </Button>
                 </Modal.Footer>
