@@ -79,3 +79,11 @@ export const unenrollFromCourse = async (userId: string, courseId: string) => {
  const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}/courses/${courseId}`);
  return response.data;
 };
+export const findAnswerForUser = async (userId: string, quizId: string, courseId: string) => {
+  const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses/${courseId}/quizzes/${quizId}`);
+  return response.data;
+};
+export const createAnswer = async (answer: any, courseId: string, quizId: string) => {
+  const response = await axiosWithCredentials.post(`${USERS_API}/current/courses/${courseId}/quizzes/${quizId}`, answer);
+  return response.data;
+};
