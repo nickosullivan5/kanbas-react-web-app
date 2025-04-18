@@ -29,9 +29,9 @@ export default function QuizSession() {
 
     const {cid, qid} = useParams();
     const [quizzes, setQuizzes] = useState<any[]>([]);
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentAnswers, setCurrentAnswers] = useState({});
+    const [currentAnswers, setCurrentAnswers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");

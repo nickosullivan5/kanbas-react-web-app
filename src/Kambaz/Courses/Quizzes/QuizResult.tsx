@@ -16,22 +16,21 @@ import {
     Col,
     Badge
 } from "react-bootstrap";
-import {v4 as uuidv4} from "uuid";
+import { FaCheck } from "react-icons/fa";
+import { FiXCircle } from "react-icons/fi";
 import {AiOutlineExclamationCircle} from "react-icons/ai";
 import {useSelector} from "react-redux";
-import * as answersClient from "./Answers/client.ts"
 
-export default function QuizSession() {
+export default function QuizResult() {
     const {cid, qid} = useParams();
     const [quizzes, setQuizzes] = useState<any[]>([]);
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentAnswers, setCurrentAnswers] = useState({});
     const [loading, setLoading] = useState(true);
     // const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
-    const [attemptNumber, setAttemptNumber] = useState(0)
     const {currentUser} = useSelector((state: any) => state.accountReducer);
+    const [answer, setAnswer] = useState<any>();
 
     const fetchQuizzes = async () => {
         try {
@@ -44,26 +43,21 @@ export default function QuizSession() {
             setLoading(false);
         }
     };
-const fetchPreviousAnswer = async () => {
-    try {
-        const getAnswer = await userClient.findAnswerForUser(
-            currentUser._id as string,
-            qid as string,
-            cid as string
-        );
+    const fetchPreviousAnswer = async () => {
+        try {
+            const getAnswer = await userClient.findAnswerForUser(
+                currentUser._id as string,
+                qid as string,
+                cid as string
+            );
 
-        if (getAnswer && typeof getAnswer.attemptNum === 'number') {
-            setAttemptNumber(getAnswer.attemptNum + 1);
-        } else {
-            setAttemptNumber(1);
+            setAnswer(getAnswer);
+        } catch (error) {
+            console.error("Error fetching previous answer:", error);
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error("Error fetching previous answer:", error);
-        setAttemptNumber(1); // fallback in case of an actual error (e.g. network/server error)
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     useEffect(() => {
         fetchQuizzes();
@@ -77,82 +71,6 @@ const fetchPreviousAnswer = async () => {
             setQuestions(quiz.questions || []);
         }
     }, [quiz]);
-
-    const handleSelectAnswer = (index: number, value: any) => {
-        setCurrentAnswers({...currentAnswers, [index]: value});
-    };
-
-    const calculateScore = (currentAnswers: any, questions: any[]) => {
-        let correctCount = 0;
-        questions.forEach((question, index) => {
-            const userAnswer = currentAnswers[index];
-            switch (question.type) {
-                case "multiple_choice":
-                    if (userAnswer === question.correctAnswerIndex) {
-                        correctCount++;
-                    }
-                    break;
-
-                case "true_false":
-                    if (userAnswer === question.correctAnswer) {
-                        correctCount++;
-                    }
-                    break;
-
-                case "fill_in_blank": {
-                    const correctText = (question.correctAnswer || "").trim().toLowerCase();
-                    const userText = (userAnswer || "").trim().toLowerCase();
-                    if (userText === correctText) {
-                        correctCount++;
-                    }
-                    break;
-                }
-
-                default:
-                    break;
-            }
-        });
-        return correctCount / questions.length;
-    };
-    const handleSubmit = async () => {
-        console.log("User:", currentUser?._id);
-      console.log("Quiz ID:", qid);
-      console.log("Course ID:", cid);
-      console.log("Attempt Number:", attemptNumber);
-
-        const score = calculateScore(currentAnswers, questions);
-        const answer = {
-            _id: uuidv4(),
-            quiz: qid,
-            user: currentUser._id,
-            course: cid,
-            grade: score,
-            date: new Date(),
-            attemptNum: attemptNumber
-        }
-        // create answer object
-        // check student answers against correct answers
-        // calculate score
-        // update answer object score
-        // createAnswer(answer: any, courseId: string, quizId: string) if attemptNum = 1
-        // updateAnswer if attemptNum > 1
-        if (attemptNumber === 1) {
-                await userClient.createAnswer(answer, cid as string, qid as string);
-            } else if (attemptNumber > 1) {
-                await answersClient.updateAnswer(answer);
-            }
-        try {
-            setLoading(true);
-
-            // setSubmitted(true);
-            // alert("Answers submitted successfully!");
-        } catch (err) {
-            setError("Failed to submit answers. Please try again.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading) {
         return (
@@ -182,6 +100,7 @@ const fetchPreviousAnswer = async () => {
     }
 
     const currentQuestion = questions[currentIndex];
+
     const progress = ((currentIndex + 1) / questions.length) * 100;
 
     return (
@@ -244,13 +163,21 @@ const fetchPreviousAnswer = async () => {
                                 {/* Multiple Choice */}
                                 {currentQuestion.type === "multiple_choice" && (
                                     <Form>
-                                        <ListGroup variant="flush" style={{borderRadius: "0"}}>
-                                            {currentQuestion.choices.map((choice: string, idx: number) => (
+                                        <ListGroup variant="flush" style={{ borderRadius: "0" }}>
+                                            {currentQuestion.choices.map((choice: string, idx: number) => {
+                                                const isCorrect = idx === currentQuestion.correctAnswerIndex;
+                                                const isUserChoice = answer.answers[currentIndex] === idx;
+                                                const isWrongUserChoice = isUserChoice && !isCorrect;
+
+                                                return (
                                                 <ListGroup.Item
                                                     key={idx}
                                                     style={{
                                                         padding: "0.75rem 1.25rem",
-                                                        borderColor: "#ddd"
+                                                        borderColor: "#ddd",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between"
                                                     }}
                                                 >
                                                     <Form.Check
@@ -258,12 +185,21 @@ const fetchPreviousAnswer = async () => {
                                                         id={`choice-${currentIndex}-${idx}`}
                                                         name={`question-${currentIndex}`}
                                                         label={choice}
-                                                        checked={currentAnswers[currentIndex] === idx}
-                                                        onChange={() => handleSelectAnswer(currentIndex, idx)}
-                                                        style={{color: "#373737"}}
+                                                        checked={isUserChoice}
+                                                        disabled // disables the button
+                                                        style={{ color: "#373737" }}
                                                     />
+
+                                                    {/* Icon rendering */}
+                                                    {isCorrect && (
+                                                        <FaCheck style={{ color: "green", marginLeft: "0.5rem" }} />
+                                                    )}
+                                                    {isWrongUserChoice && (
+                                                        <FiXCircle style={{ color: "red", marginLeft: "0.5rem" }} />
+                                                    )}
                                                 </ListGroup.Item>
-                                            ))}
+                                                );
+                                            })}
                                         </ListGroup>
                                     </Form>
                                 )}
@@ -272,48 +208,84 @@ const fetchPreviousAnswer = async () => {
                                 {currentQuestion.type === "true_false" && (
                                     <Form>
                                         <ListGroup variant="flush" style={{borderRadius: "0"}}>
-                                            {["True", "False"].map((val, idx) => (
-                                                <ListGroup.Item
-                                                    key={idx}
-                                                    style={{
-                                                        padding: "0.75rem 1.25rem",
-                                                        borderColor: "#ddd"
-                                                    }}
-                                                >
-                                                    <Form.Check
-                                                        type="radio"
-                                                        id={`tf-${currentIndex}-${idx}`}
-                                                        name={`question-${currentIndex}`}
-                                                        label={val}
-                                                        checked={currentAnswers[currentIndex] === (val === "True")}
-                                                        onChange={() =>
-                                                            handleSelectAnswer(currentIndex, val === "True")
-                                                        }
-                                                        style={{color: "#333"}}
-                                                    />
-                                                </ListGroup.Item>
-                                            ))}
+                                            {[true, false].map((val, idx) => {
+                                                const isCorrect = val === currentQuestion.correctAnswer;
+                                                const isUserChoice = answer.answers[currentIndex] === idx;
+                                                const isWrongUserChoice = isUserChoice && !isCorrect;
+
+                                                return (
+                                                    <ListGroup.Item
+                                                        key={idx}
+                                                        style={{
+                                                            padding: "0.75rem 1.25rem",
+                                                            borderColor: "#ddd"
+                                                        }}
+                                                    >
+                                                        <Form.Check
+                                                            type="radio"
+                                                            id={`tf-${currentIndex}-${idx}`}
+                                                            name={`question-${currentIndex}`}
+                                                            label={val ? "True" : "False"}
+                                                            checked={isUserChoice}
+                                                            disabled
+                                                            style={{color: "#333"}}
+                                                        />
+
+                                                        {/* Icon rendering */}
+                                                        {isCorrect && (
+                                                            <FaCheck style={{ color: "green", marginLeft: "0.5rem" }} />
+                                                        )}
+                                                        {isWrongUserChoice && (
+                                                            <FiXCircle style={{ color: "red", marginLeft: "0.5rem" }} />
+                                                        )}
+                                                    </ListGroup.Item>
+                                                )
+                                            })}
                                         </ListGroup>
                                     </Form>
                                 )}
 
                                 {/* Fill in the Blank */}
                                 {currentQuestion.type === "fill_in_blank" && (
-                                    <Form.Group controlId={`fillBlank-${currentIndex}`}>
+                                    <div>
+                                        <Form.Group
+                                        controlId={`fillBlank-${currentIndex}`}
+                                        style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+                                        >
                                         <Form.Control
                                             type="text"
-                                            value={currentAnswers[currentIndex] || ""}
-                                            onChange={(e) =>
-                                                handleSelectAnswer(currentIndex, e.target.value)
-                                            }
+                                            value={answer.answers[currentIndex]}
+                                            disabled
                                             placeholder="Type your answer here..."
                                             style={{
-                                                borderRadius: "0",
-                                                borderColor: "#ddd",
-                                                color: "#333"
+                                            borderRadius: "0",
+                                            borderColor: "#ddd",
+                                            color: "#333",
+                                            flexGrow: 1
                                             }}
                                         />
-                                    </Form.Group>
+
+                                        {/* Show icon */}
+                                        {answer.answers[currentIndex] &&
+                                            currentQuestion.possibleAnswers.some(
+                                            (ans: any) =>
+                                                ans.trim().toLowerCase() ===
+                                                answer.answers[currentIndex].trim().toLowerCase()
+                                            ) ? (
+                                            <FaCheck style={{ color: "green" }} />
+                                        ) : (
+                                            answer.answers[currentIndex] && (
+                                            <FiXCircle style={{ color: "red" }} />
+                                            )
+                                        )}
+                                        </Form.Group>
+
+                                        {/* Show list of correct answers */}
+                                        <div style={{ marginTop: "0.5rem", color: "#666", fontStyle: "italic" }}>
+                                            <strong>Accepted answers:</strong>{" "}
+                                            {currentQuestion.possibleAnswers.join(", ")}
+                                        </div>
+                                    </div>
                                 )}
                             </Card.Body>
                         </Card>
@@ -355,17 +327,6 @@ const fetchPreviousAnswer = async () => {
                                 }}
                             >
                                 Next
-                            </Button>
-                        </Col>
-                        <Col md={4}>
-                            <Button
-                                variant="danger"
-                                onClick={handleSubmit}
-                                className="w-100 wd-bg-color-red"
-                                disabled={Object.keys(currentAnswers).length !== questions.length}
-                                style={{borderRadius: "0"}}
-                            >
-                                Submit Quiz
                             </Button>
                         </Col>
                     </Row>
