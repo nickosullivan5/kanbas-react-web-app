@@ -21,8 +21,6 @@ import {AiOutlineExclamationCircle} from "react-icons/ai";
 import {useSelector} from "react-redux";
 import * as answersClient from "./Answers/client.ts"
 import {useNavigate} from "react-router-dom";
-import {users} from "../../Database";
-import {findAnswerForUser} from "../../Account/client.ts";
 
 export default function QuizSession() {
     const navigate = useNavigate()
@@ -133,7 +131,8 @@ const fetchPreviousAnswer = async () => {
             course: cid,
             grade: score,
             date: new Date(),
-            attemptNum: attemptNumber
+            attemptNum: attemptNumber,
+            answers: currentAnswers
         }
         // create answer object
         // check student answers against correct answers

@@ -35,7 +35,7 @@ export default function QuizDetails() {
             {/* Buttons */}
             <div className="d-flex justify-content-center gap-3 mt-4 mb-3">
                 <Link
-                    to={`/Kambaz/Courses/${cid}/Quizzes/${qid}/Preview`}
+                    to={`/Kambaz/Courses/${cid}/Quizzes/${qid}/Session`}
                     className="btn btn-light btn-outline-dark rounded-0"
                 >
                     Preview
