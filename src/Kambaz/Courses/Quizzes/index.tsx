@@ -177,18 +177,27 @@ export default function Quizzes() {
                                 </Link>
                             </FacultyOnlyRoute>
                             <div className="flex-grow-1">
-                                {(answerAttemptsLeftMap[quiz._id] <= 0 && currentUser.role === 'STUDENT') ? (
-                                    <div style={{textDecoration: 'none'}} className="text-danger">
-                                        <div><b>{quiz.title}</b> No attempts remaining!</div>
-                                    </div>
-                                ) : (
-                                    <Link
-                                        to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/Session`}
-                                        style={{textDecoration: 'none', color: 'inherit'}}
-                                    >
-                                        <div><b>{quiz.title}</b></div>
-                                    </Link>
-                                )}
+                                {/* if getAvailabilityStatus === "CLOSED" don't let the second option be a link, just show the title */}
+                                {
+                                    answerAttemptsLeftMap[quiz._id] <= 0 && currentUser.role === 'STUDENT' ? (
+                                        <div style={{textDecoration: 'none'}} className="text-danger">
+                                            <div><b>{quiz.title}</b> No attempts remaining!</div>
+                                        </div>
+                                    ) : (
+                                        getAvailabilityStatus(quiz) != "Available"  ? (
+                                            <div style={{textDecoration: 'none'}} className="">
+                                                <div><b>{quiz.title}</b></div>
+                                            </div>
+                                        ) : (
+                                            <Link
+                                                to={`/Kambaz/Courses/${cid}/Quizzes/${quiz._id}/Session`}
+                                                style={{textDecoration: 'none', color: 'inherit'}}
+                                            >
+                                                <div><b>{quiz.title}</b></div>
+                                            </Link>
+                                        )
+                                    )
+                                }
 
                                 <small className="text-muted d-block mb-1">{getAvailabilityStatus(quiz)}</small>
                                 <small className="text-muted">

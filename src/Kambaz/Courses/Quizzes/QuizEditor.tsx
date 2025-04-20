@@ -89,7 +89,7 @@ export default function QuizEditor() {
             shuffleAnswers: shuffleAnswers,
             timeLimit: timeLimit,
             multipleAttempts: multipleAttempts,
-            howManyAttempts: howManyAttempts,
+            howManyAttempts: howManyAttempts === 0 ? 1 : howManyAttempts,
             showCorrectAnswers: showCorrectAnswers,
             accessCode: accessCode,
             oneQuestionAtATime: oneQuestionAtATime,
@@ -115,6 +115,7 @@ export default function QuizEditor() {
         return <div className="text-center mt-5 text-danger">Quiz not found.</div>;
     }
     console.log("questions: ", questions)
+        console.log("how many atempts:" , howManyAttempts)
 
     return (
         <div className="p-4">
